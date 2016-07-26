@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.taskManage.mapper.TaskFilterMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.taskManage.pojo.TaskFilterKey" >
+    <id column="TASK_ID" property="taskId" jdbcType="DECIMAL" />
+    <id column="FILTER_PATTERN" property="filterPattern" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="inspur.crawl.taskManage.pojo.TaskFilterKey" >
+    insert into CRAWLER_TASK_FILTER (TASK_ID, FILTER_PATTERN)
+    values (#{taskId,jdbcType=DECIMAL}, #{filterPattern,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.taskManage.pojo.TaskFilterKey" >
+    insert into CRAWLER_TASK_FILTER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="filterPattern != null" >
+        FILTER_PATTERN,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskId != null" >
+        #{taskId,jdbcType=DECIMAL},
+      </if>
+      <if test="filterPattern != null" >
+        #{filterPattern,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectByTaskId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select TASK_ID,FILTER_PATTERN from CRAWLER_TASK_FILTER 
+    where TASK_ID= #{taskId}
+  </select>
+   <select id="selectStringByTaskId" parameterType="java.lang.Long" resultType="java.lang.String" >
+    select wmsys.wm_concat(FILTER_PATTERN) from CRAWLER_TASK_FILTER 
+    where TASK_ID= #{taskId}
+  </select>
+  <select id="deleteByTaskId" parameterType="java.lang.Long" resultType="java.lang.Integer" >
+    delete from CRAWLER_TASK_FILTER
+    where TASK_ID= #{taskId}
+  </select>
+</mapper>

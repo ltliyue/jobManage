@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.ruleManage.mapper.ExtractRuleMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.ruleManage.pojo.ExtractRule" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="URL_PATTERN" property="urlPattern" jdbcType="VARCHAR" />
+    <result column="EXTRACT_TYPE" property="extractType" jdbcType="VARCHAR" />
+    <result column="REGEX" property="regex" jdbcType="VARCHAR" />
+    <result column="REGEX_GROUP_ID" property="regexGroupId" jdbcType="VARCHAR" />
+    <result column="XPATH" property="xpath" jdbcType="VARCHAR" />
+    <result column="TIME" property="time" jdbcType="TIMESTAMP" />
+    <result column="ENABLED" property="enabled" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="CONTAIN_HTML" property="containHtml" jdbcType="DECIMAL" />
+    <result column="STORE_COLUMN_NAME" property="storeColumnName" jdbcType="VARCHAR" />
+    <result column="STORE_COLUMN_COMMENT" property="storeColumnComment" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, TASK_ID, URL_PATTERN, EXTRACT_TYPE, REGEX, REGEX_GROUP_ID, XPATH, TIME, ENABLED, 
+    NAME, CONTAIN_HTML, STORE_COLUMN_NAME, STORE_COLUMN_COMMENT
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.ruleManage.pojo.ExtractRuleCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from EXTRACT_RULE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from EXTRACT_RULE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from EXTRACT_RULE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getSiteId" resultType="java.lang.String" parameterType="java.lang.String" >
+    select 
+    SITE_ID
+    from CRAWLER_TASK
+    where TASK_ID = #{taskId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getTaskId" resultType="java.lang.String" parameterType="java.lang.String" >
+    select 
+    TASK_ID
+    from PAGE_EXTRACT_RULE
+    where ID = #{ruleId,jdbcType=VARCHAR}
+  </select>
+  
+  
+   <select id="listPage" resultMap="BaseResultMap" parameterType="inspur.crawl.ruleManage.pojo.ExtractRuleCriteria">
+  	select * from EXTRACT_RULE order by NAME desc
+  </select>
+  
+  <select id="listPageByTaskId" resultMap="BaseResultMap" parameterType="inspur.crawl.ruleManage.pojo.ExtractRuleCriteria">
+  	select * from EXTRACT_RULE where TASK_ID=#{taskId}  order by NAME desc
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from EXTRACT_RULE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="inspur.crawl.ruleManage.pojo.ExtractRuleCriteria" >
+    delete from EXTRACT_RULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.ruleManage.pojo.ExtractRule" >
+    insert into EXTRACT_RULE (ID, TASK_ID, URL_PATTERN, 
+      EXTRACT_TYPE, REGEX, REGEX_GROUP_ID, 
+      XPATH, TIME, ENABLED, 
+      NAME, CONTAIN_HTML, STORE_COLUMN_NAME, 
+      STORE_COLUMN_COMMENT)
+    values (#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{urlPattern,jdbcType=VARCHAR}, 
+      #{extractType,jdbcType=VARCHAR}, #{regex,jdbcType=VARCHAR}, #{regexGroupId,jdbcType=VARCHAR}, 
+      #{xpath,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{enabled,jdbcType=DECIMAL}, 
+      #{name,jdbcType=VARCHAR}, #{containHtml,jdbcType=DECIMAL}, #{storeColumnName,jdbcType=VARCHAR}, 
+      #{storeColumnComment,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.ruleManage.pojo.ExtractRule" >
+    insert into EXTRACT_RULE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="urlPattern != null" >
+        URL_PATTERN,
+      </if>
+      <if test="extractType != null" >
+        EXTRACT_TYPE,
+      </if>
+      <if test="regex != null" >
+        REGEX,
+      </if>
+      <if test="regexGroupId != null" >
+        REGEX_GROUP_ID,
+      </if>
+      <if test="xpath != null" >
+        XPATH,
+      </if>
+      <if test="time != null" >
+        TIME,
+      </if>
+      <if test="enabled != null" >
+        ENABLED,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="containHtml != null" >
+        CONTAIN_HTML,
+      </if>
+      <if test="storeColumnName != null" >
+        STORE_COLUMN_NAME,
+      </if>
+      <if test="storeColumnComment != null" >
+        STORE_COLUMN_COMMENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="urlPattern != null" >
+        #{urlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="extractType != null" >
+        #{extractType,jdbcType=VARCHAR},
+      </if>
+      <if test="regex != null" >
+        #{regex,jdbcType=VARCHAR},
+      </if>
+      <if test="regexGroupId != null" >
+        #{regexGroupId,jdbcType=VARCHAR},
+      </if>
+      <if test="xpath != null" >
+        #{xpath,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enabled != null" >
+        #{enabled,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="containHtml != null" >
+        #{containHtml,jdbcType=DECIMAL},
+      </if>
+      <if test="storeColumnName != null" >
+        #{storeColumnName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeColumnComment != null" >
+        #{storeColumnComment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.ruleManage.pojo.ExtractRuleCriteria" resultType="java.lang.Integer" >
+    select count(*) from EXTRACT_RULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update EXTRACT_RULE
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskId != null" >
+        TASK_ID = #{record.taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urlPattern != null" >
+        URL_PATTERN = #{record.urlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="record.extractType != null" >
+        EXTRACT_TYPE = #{record.extractType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regex != null" >
+        REGEX = #{record.regex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regexGroupId != null" >
+        REGEX_GROUP_ID = #{record.regexGroupId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xpath != null" >
+        XPATH = #{record.xpath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.time != null" >
+        TIME = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.enabled != null" >
+        ENABLED = #{record.enabled,jdbcType=DECIMAL},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.containHtml != null" >
+        CONTAIN_HTML = #{record.containHtml,jdbcType=DECIMAL},
+      </if>
+      <if test="record.storeColumnName != null" >
+        STORE_COLUMN_NAME = #{record.storeColumnName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.storeColumnComment != null" >
+        STORE_COLUMN_COMMENT = #{record.storeColumnComment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update EXTRACT_RULE
+    set ID = #{record.id,jdbcType=VARCHAR},
+      TASK_ID = #{record.taskId,jdbcType=VARCHAR},
+      URL_PATTERN = #{record.urlPattern,jdbcType=VARCHAR},
+      EXTRACT_TYPE = #{record.extractType,jdbcType=VARCHAR},
+      REGEX = #{record.regex,jdbcType=VARCHAR},
+      REGEX_GROUP_ID = #{record.regexGroupId,jdbcType=VARCHAR},
+      XPATH = #{record.xpath,jdbcType=VARCHAR},
+      TIME = #{record.time,jdbcType=TIMESTAMP},
+      ENABLED = #{record.enabled,jdbcType=DECIMAL},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      CONTAIN_HTML = #{record.containHtml,jdbcType=DECIMAL},
+      STORE_COLUMN_NAME = #{record.storeColumnName,jdbcType=VARCHAR},
+      STORE_COLUMN_COMMENT = #{record.storeColumnComment,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.ruleManage.pojo.ExtractRule" >
+    update EXTRACT_RULE
+    <set >
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="urlPattern != null" >
+        URL_PATTERN = #{urlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="extractType != null" >
+        EXTRACT_TYPE = #{extractType,jdbcType=VARCHAR},
+      </if>
+      <if test="regex != null" >
+        REGEX = #{regex,jdbcType=VARCHAR},
+      </if>
+      <if test="regexGroupId != null" >
+        REGEX_GROUP_ID = #{regexGroupId,jdbcType=VARCHAR},
+      </if>
+      <if test="xpath != null" >
+        XPATH = #{xpath,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        TIME = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enabled != null" >
+        ENABLED = #{enabled,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="containHtml != null" >
+        CONTAIN_HTML = #{containHtml,jdbcType=DECIMAL},
+      </if>
+      <if test="storeColumnName != null" >
+        STORE_COLUMN_NAME = #{storeColumnName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeColumnComment != null" >
+        STORE_COLUMN_COMMENT = #{storeColumnComment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="inspur.crawl.ruleManage.pojo.ExtractRule" >
+    update EXTRACT_RULE
+    set TASK_ID = #{taskId,jdbcType=VARCHAR},
+      URL_PATTERN = #{urlPattern,jdbcType=VARCHAR},
+      EXTRACT_TYPE = #{extractType,jdbcType=VARCHAR},
+      REGEX = #{regex,jdbcType=VARCHAR},
+      REGEX_GROUP_ID = #{regexGroupId,jdbcType=VARCHAR},
+      XPATH = #{xpath,jdbcType=VARCHAR},
+      TIME = #{time,jdbcType=TIMESTAMP},
+      ENABLED = #{enabled,jdbcType=DECIMAL},
+      NAME = #{name,jdbcType=VARCHAR},
+      CONTAIN_HTML = #{containHtml,jdbcType=DECIMAL},
+      STORE_COLUMN_NAME = #{storeColumnName,jdbcType=VARCHAR},
+      STORE_COLUMN_COMMENT = #{storeColumnComment,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

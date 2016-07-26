@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.requirement.mapper.RequireMentSplitMapper">
+	<resultMap id="BaseResultMap"
+		type="inspur.crawl.requirement.pojo.RequireMentSplit">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CONTENT" property="content" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="PLAN_TIME" property="planTime" jdbcType="VARCHAR" />
+		<result column="DO_TIME" property="doTime" jdbcType="VARCHAR" />
+		<result column="ISALIVE" property="isalive" jdbcType="VARCHAR" />
+		<result column="JOB_FREQUENCY" property="jobFrequency"
+			jdbcType="VARCHAR" />
+		<result column="JOB_DEGREE" property="jobDegree" jdbcType="VARCHAR" />
+		<result column="JOB_CONTENT" property="jobContent" jdbcType="VARCHAR" />
+		<result column="JOB_RANGE" property="jobRange" jdbcType="VARCHAR" />
+		<result column="ISMATCH" property="ismatch" jdbcType="VARCHAR" />
+		<result column="ISCOLLECTION" property="iscollection" jdbcType="VARCHAR" />
+		<result column="ISREPORT" property="isreport" jdbcType="VARCHAR" />
+		<result column="RID" property="rid" jdbcType="DECIMAL" />
+		<result column="HEADER" property="header" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="PROPERTIES" property="properties" jdbcType="VARCHAR" />
+		<result column="CUSTOMER" property="customer" jdbcType="VARCHAR" />
+		<result column="PROPOSE_USER" property="proposeUser" jdbcType="VARCHAR" />
+		<result column="PROPOSE_TIME" property="proposeTime" jdbcType="VARCHAR" />
+		<result column="REQUEST_TIME" property="requestTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getAllRequireMentSplit" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirement.pojo.RequireMentSplit">
+		select * from requirement_split t where 1=1
+		<if test="id != null and id!=''">
+			and t.id = '${id}'
+		</if>
+		<if test="rid != null and rid!=''">
+			and t.rid = '${rid}'
+		</if>
+		<if test="content != null and content!='' ">
+			and t1.CONTENT = #{content,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null and type!='' ">
+			and t1.TYPE = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="planTime != null and planTime!='' ">
+			and t1.PLAN_TIME = #{planTime,jdbcType=VARCHAR}
+		</if>
+		<if test="doTime != null and doTime!='' ">
+			and t1.DO_TIME = #{doTime,jdbcType=VARCHAR}
+		</if>
+		<if test="isalive != null and isalive!='' ">
+			and t1.ISALIVE = #{isalive,jdbcType=VARCHAR}
+		</if>
+		<if test="jobFrequency != null and jobFrequency!='' ">
+			and t1.JOB_FREQUENCY = #{jobFrequency,jdbcType=VARCHAR}
+		</if>
+		<if test="jobDegree != null and jobDegree!=''">
+			and t1.JOB_DEGREE =
+			#{jobDegree,jdbcType=VARCHAR}
+		</if>
+		<if test="jobContent != null and jobContent!='' ">
+			and t1.JOB_CONTENT = #{jobContent,jdbcType=VARCHAR}
+		</if>
+		<if test="jobRange != null and jobRange!='' ">
+			and t1.JOB_RANGE = #{jobRange,jdbcType=VARCHAR}
+		</if>
+		<if test="header != null and header!=''">
+			and t1.HEADER = #{header,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status!=''">
+			and t1.STATUS = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="properties != null and properties!='' ">
+			and PROPERTIES = #{properties,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeUser != null and proposeUser!='' ">
+			and PROPOSE_USER = #{proposeUser,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeTime != null and proposeTime!='' ">
+			and PROPOSE_TIME = #{proposeTime,jdbcType=VARCHAR}
+		</if>
+		<if test="requestTime != null and requestTime!='' ">
+			and REQUEST_TIME = #{requestTime,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeTimeF != null and proposeTimeF!=''">
+			and PROPOSE_TIME &gt;= '${proposeTimeF}'
+		</if>
+		<if test="proposeTimeT != null and proposeTimeT!=''">
+			and PROPOSE_TIME &lt;= '${proposeTimeT}'
+		</if>
+		<if test="requestTimeF != null and requestTimeF!=''">
+			and REQUEST_TIME &gt;= '${requestTimeF}'
+		</if>
+		<if test="requestTimeT != null and requestTimeT!=''">
+			and REQUEST_TIME &lt;= '${requestTimeT}'
+		</if>
+		order by RID DESC, PLAN_TIME DESC
+	</select>
+	
+	<!-- 存续任务 -->
+	<select id="getAllRequireMentSplitByRidlistPageCX" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirement.pojo.RequireMentSplit">
+		select
+		t1.*,t2.PROPERTIES,t2.customer,t2.PROPOSE_USER,t2.PROPOSE_TIME,t2.REQUEST_TIME
+		from REQUIREMENT_SPLIT t1, REQUIREMENT t2 where t1.rid=t2.id
+		<if test="name != null and name!='' ">
+			and t1.NAME like CONCAT(CONCAT('%',
+			#{name,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="content != null  and content!='' ">
+			and t1.CONTENT = #{content,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null and type!='' ">
+			and t1.TYPE = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="planTime != null and planTime!='' ">
+			and t1.PLAN_TIME = #{planTime,jdbcType=VARCHAR}
+		</if>
+		<if test="doTime != null and doTime!='' ">
+			and t1.DO_TIME = #{doTime,jdbcType=VARCHAR}
+		</if>
+		<if test="isalive != null and isalive!='' ">
+			and t1.ISALIVE = #{isalive,jdbcType=VARCHAR}
+		</if>
+		<if test="jobFrequency != null and jobFrequency!='' ">
+			and t1.JOB_FREQUENCY = #{jobFrequency,jdbcType=VARCHAR}
+		</if>
+		<if test="jobDegree != null and jobDegree!=''">
+			and t1.JOB_DEGREE =
+			#{jobDegree,jdbcType=VARCHAR}
+		</if>
+		<if test="jobContent != null and jobContent!='' ">
+			and t1.JOB_CONTENT = #{jobContent,jdbcType=VARCHAR}
+		</if>
+		<if test="jobRange != null and jobRange!='' ">
+			and t1.JOB_RANGE = #{jobRange,jdbcType=VARCHAR}
+		</if>
+		<if test="header != null and header!=''">
+			and t1.HEADER = #{header,jdbcType=VARCHAR}
+		</if>
+		<if test="properties != null and properties!='' ">
+			and PROPERTIES = #{properties,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeUser != null and proposeUser!='' ">
+			and PROPOSE_USER = #{proposeUser,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeTime != null and proposeTime!='' ">
+			and PROPOSE_TIME = #{proposeTime,jdbcType=VARCHAR}
+		</if>
+		<if test="requestTime != null and requestTime!='' ">
+			and REQUEST_TIME = #{requestTime,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeTimeF != null and proposeTimeF!=''">
+			and PROPOSE_TIME &gt;= '${proposeTimeF}'
+		</if>
+		<if test="proposeTimeT != null and proposeTimeT!=''">
+			and PROPOSE_TIME &lt;= '${proposeTimeT}'
+		</if>
+		<if test="requestTimeF != null and requestTimeF!=''">
+			and REQUEST_TIME &gt;= '${requestTimeF}'
+		</if>
+		<if test="requestTimeT != null and requestTimeT!=''">
+			and REQUEST_TIME &lt;= '${requestTimeT}'
+		</if>
+		and (t1.STATUS='未开始' or t1.STATUS='进行中') 
+		order by RID DESC, PLAN_TIME DESC
+	</select>
+	
+	<!-- 任务进度 -->
+	<select id="getAllRequireMentSplitByRidlistPage" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirement.pojo.RequireMentSplit">
+		select
+		t1.*,t2.PROPERTIES,t2.customer,t2.PROPOSE_USER,t2.PROPOSE_TIME,t2.REQUEST_TIME
+		from REQUIREMENT_SPLIT t1, REQUIREMENT t2 where t1.rid=t2.id
+		<if test="name != null and name!='' ">
+			and t1.NAME like CONCAT(CONCAT('%',
+			#{name,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="content != null  and content!='' ">
+			and t1.CONTENT = #{content,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null and type!='' ">
+			and t1.TYPE = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="planTime != null and planTime!='' ">
+			and t1.PLAN_TIME = #{planTime,jdbcType=VARCHAR}
+		</if>
+		<if test="doTime != null and doTime!='' ">
+			and t1.DO_TIME = #{doTime,jdbcType=VARCHAR}
+		</if>
+		<if test="isalive != null and isalive!='' ">
+			and t1.ISALIVE = #{isalive,jdbcType=VARCHAR}
+		</if>
+		<if test="jobFrequency != null and jobFrequency!='' ">
+			and t1.JOB_FREQUENCY = #{jobFrequency,jdbcType=VARCHAR}
+		</if>
+		<if test="jobDegree != null and jobDegree!=''">
+			and t1.JOB_DEGREE =
+			#{jobDegree,jdbcType=VARCHAR}
+		</if>
+		<if test="jobContent != null and jobContent!='' ">
+			and t1.JOB_CONTENT = #{jobContent,jdbcType=VARCHAR}
+		</if>
+		<if test="jobRange != null and jobRange!='' ">
+			and t1.JOB_RANGE = #{jobRange,jdbcType=VARCHAR}
+		</if>
+		<if test="header != null and header!=''">
+			and t1.HEADER = #{header,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status!=''">
+			and t1.STATUS = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="properties != null and properties!='' ">
+			and PROPERTIES = #{properties,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeUser != null and proposeUser!='' ">
+			and PROPOSE_USER = #{proposeUser,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeTime != null and proposeTime!='' ">
+			and PROPOSE_TIME = #{proposeTime,jdbcType=VARCHAR}
+		</if>
+		<if test="requestTime != null and requestTime!='' ">
+			and REQUEST_TIME = #{requestTime,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeTimeF != null and proposeTimeF!=''">
+			and PROPOSE_TIME &gt;= '${proposeTimeF}'
+		</if>
+		<if test="proposeTimeT != null and proposeTimeT!=''">
+			and PROPOSE_TIME &lt;= '${proposeTimeT}'
+		</if>
+		<if test="requestTimeF != null and requestTimeF!=''">
+			and REQUEST_TIME &gt;= '${requestTimeF}'
+		</if>
+		<if test="requestTimeT != null and requestTimeT!=''">
+			and REQUEST_TIME &lt;= '${requestTimeT}'
+		</if>
+		and (t1.STATUS='未开始' or t1.STATUS='进行中') 
+		order by RID DESC, PLAN_TIME DESC
+	</select>
+	
+	<!-- 固定任务 -->
+	<select id="getAllRequireMentSplitFixedlistPage" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirement.pojo.RequireMentSplit">
+		select
+		t1.*,t2.PROPERTIES,t2.customer,t2.PROPOSE_USER,t2.PROPOSE_TIME,t2.REQUEST_TIME
+		from REQUIREMENT_SPLIT t1, REQUIREMENT t2 where t1.rid=t2.id and
+		JOB_FREQUENCY!=1
+		<if test="name != null  and name!=''">
+			and t1.NAME like CONCAT(CONCAT('%',
+			#{name,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="content != null  and content!='' ">
+			and t1.CONTENT = #{content,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null and type!='' ">
+			and t1.TYPE = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="planTime != null and planTime!='' ">
+			and t1.PLAN_TIME = #{planTime,jdbcType=VARCHAR}
+		</if>
+		<if test="doTime != null and doTime!='' ">
+			and t1.DO_TIME = #{doTime,jdbcType=VARCHAR}
+		</if>
+		
+		<if test="isalive != null and isalive!='' ">
+			and t1.ISALIVE = #{isalive,jdbcType=VARCHAR}
+		</if>
+		<if test="jobFrequency != null and jobFrequency!='' ">
+			and t1.JOB_FREQUENCY = #{jobFrequency,jdbcType=VARCHAR}
+		</if>
+		<if test="jobDegree != null and jobDegree!=''">
+			and t1.JOB_DEGREE =
+			#{jobDegree,jdbcType=VARCHAR}
+		</if>
+		<if test="jobContent != null and jobContent!='' ">
+			and t1.JOB_CONTENT = #{jobContent,jdbcType=VARCHAR}
+		</if>
+		<if test="jobRange != null and jobRange!='' ">
+			and t1.JOB_RANGE = #{jobRange,jdbcType=VARCHAR}
+		</if>
+		<if test="header != null and header!=''">
+			and t1.HEADER = #{header,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status!=''">
+			and t1.STATUS = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="properties != null and properties!='' ">
+			and PROPERTIES = #{properties,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeUser != null and proposeUser!='' ">
+			and PROPOSE_USER = #{proposeUser,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeTime != null and proposeTime!='' ">
+			and PROPOSE_TIME = #{proposeTime,jdbcType=VARCHAR}
+		</if>
+		<if test="requestTime != null and requestTime!='' ">
+			and REQUEST_TIME = #{requestTime,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeTimeF != null and proposeTimeF!=''">
+			and PROPOSE_TIME &gt;= '${proposeTimeF}'
+		</if>
+		<if test="proposeTimeT != null and proposeTimeT!=''">
+			and PROPOSE_TIME &lt;= '${proposeTimeT}'
+		</if>
+		<if test="requestTimeF != null and requestTimeF!=''">
+			and REQUEST_TIME &gt;= '${requestTimeF}'
+		</if>
+		<if test="requestTimeT != null and requestTimeT!=''">
+			and t.REQUEST_TIME &lt;= '${requestTimeT}'
+		</if>
+		<if test="doTimeF != null and doTimeF!='' ">
+			and t1.DO_TIME &gt;= #{doTimeF,jdbcType=VARCHAR}
+		</if>
+		<if test="doTimeT != null and doTimeT!='' ">
+			and t1.DO_TIME &lt;= #{doTimeT,jdbcType=VARCHAR}
+		</if>
+		order by RID DESC, PLAN_TIME DESC
+	</select>
+	
+	<!-- 历史任务 -->
+	<select id="getAllRequireMentSplitHistorylistPage" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirement.pojo.RequireMentSplit">
+		select
+		t1.*,t2.PROPERTIES,t2.customer,t2.PROPOSE_USER,t2.PROPOSE_TIME,t2.REQUEST_TIME
+		from REQUIREMENT_SPLIT t1, REQUIREMENT t2 where t1.rid=t2.id
+		and
+		(t1.STATUS='已完成' or t1.STATUS='已废弃')
+		<if test="name != null and name!=''">
+			and t1.NAME like CONCAT(CONCAT('%',
+			#{name,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="content != null  and content!='' ">
+			and t1.CONTENT = #{content,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null and type!='' ">
+			and t1.TYPE = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="planTime != null and planTime!='' ">
+			and t1.PLAN_TIME = #{planTime,jdbcType=VARCHAR}
+		</if>
+		<if test="doTime != null and doTime!='' ">
+			and t1.DO_TIME = #{doTime,jdbcType=VARCHAR}
+		</if>
+		<if test="isalive != null and isalive!='' ">
+			and t1.ISALIVE = #{isalive,jdbcType=VARCHAR}
+		</if>
+		<if test="jobFrequency != null and jobFrequency!='' ">
+			and t1.JOB_FREQUENCY = #{jobFrequency,jdbcType=VARCHAR}
+		</if>
+		<if test="jobDegree != null and jobDegree!=''">
+			and t1.JOB_DEGREE =
+			#{jobDegree,jdbcType=VARCHAR}
+		</if>
+		<if test="jobContent != null and jobContent!='' ">
+			and t1.JOB_CONTENT = #{jobContent,jdbcType=VARCHAR}
+		</if>
+		<if test="jobRange != null and jobRange!='' ">
+			and t1.JOB_RANGE = #{jobRange,jdbcType=VARCHAR}
+		</if>
+		<if test="header != null and header!=''">
+			and t1.HEADER = #{header,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status!=''">
+			and t1.STATUS = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="properties != null and properties!='' ">
+			and PROPERTIES = #{properties,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeUser != null and proposeUser!='' ">
+			and PROPOSE_USER = #{proposeUser,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeTime != null and proposeTime!='' ">
+			and PROPOSE_TIME = #{proposeTime,jdbcType=VARCHAR}
+		</if>
+		<if test="requestTime != null and requestTime!='' ">
+			and REQUEST_TIME = #{requestTime,jdbcType=VARCHAR}
+		</if>
+		<if test="proposeTimeF != null and proposeTimeF!=''">
+			and PROPOSE_TIME &gt;= '${proposeTimeF}'
+		</if>
+		<if test="proposeTimeT != null and proposeTimeT!=''">
+			and PROPOSE_TIME &lt;= '${proposeTimeT}'
+		</if>
+		<if test="requestTimeF != null and requestTimeF!=''">
+			and REQUEST_TIME &gt;= '${requestTimeF}'
+		</if>
+		<if test="requestTimeT != null and requestTimeT!=''">
+			and REQUEST_TIME &lt;= '${requestTimeT}'
+		</if>
+		order by RID DESC, PLAN_TIME DESC
+	</select>
+
+	<insert id="insertRequireMentSplit" parameterType="inspur.crawl.requirement.pojo.RequireMentSplit">
+		insert into REQUIREMENT_SPLIT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="content != null">
+				CONTENT,
+			</if>
+			<if test="type != null">
+				TYPE,
+			</if>
+			<if test="planTime != null">
+				PLAN_TIME,
+			</if>
+			<if test="doTime != null">
+				DO_TIME,
+			</if>
+			<if test="isalive != null">
+				ISALIVE,
+			</if>
+			<if test="jobFrequency != null">
+				JOB_FREQUENCY,
+			</if>
+			<if test="jobDegree != null">
+				JOB_DEGREE,
+			</if>
+			<if test="jobContent != null">
+				JOB_CONTENT,
+			</if>
+			<if test="jobRange != null">
+				JOB_RANGE,
+			</if>
+			<if test="ismatch != null">
+				ISMATCH,
+			</if>
+			<if test="iscollection != null">
+				ISCOLLECTION,
+			</if>
+			<if test="isreport != null">
+				ISREPORT,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="rid != null">
+				RID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="planTime != null">
+				#{planTime,jdbcType=VARCHAR},
+			</if>
+			<if test="doTime != null">
+				#{doTime,jdbcType=VARCHAR},
+			</if>
+			<if test="isalive != null">
+				#{isalive,jdbcType=VARCHAR},
+			</if>
+			<if test="jobFrequency != null">
+				#{jobFrequency,jdbcType=VARCHAR},
+			</if>
+			<if test="jobDegree != null">
+				#{jobDegree,jdbcType=VARCHAR},
+			</if>
+			<if test="jobContent != null">
+				#{jobContent,jdbcType=VARCHAR},
+			</if>
+			<if test="jobRange != null">
+				#{jobRange,jdbcType=VARCHAR},
+			</if>
+			<if test="ismatch != null">
+				#{ismatch,jdbcType=VARCHAR},
+			</if>
+			<if test="iscollection != null">
+				#{iscollection,jdbcType=VARCHAR},
+			</if>
+			<if test="isreport != null">
+				#{isreport,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=DECIMAL},
+			</if>
+			<if test="rid != null">
+				#{rid,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateInfo" parameterType="inspur.crawl.requirement.pojo.RequireMentSplit">
+		update REQUIREMENT_SPLIT
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				CONTENT = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				TYPE = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="planTime != null">
+				PLAN_TIME = #{planTime,jdbcType=VARCHAR},
+			</if>
+			<if test="doTime != null">
+				DO_TIME = #{doTime,jdbcType=VARCHAR},
+			</if>
+			<if test="isalive != null">
+				ISALIVE = #{isalive,jdbcType=VARCHAR},
+			</if>
+			<if test="jobFrequency != null">
+				JOB_FREQUENCY = #{jobFrequency,jdbcType=VARCHAR},
+			</if>
+			<if test="jobDegree != null">
+				JOB_DEGREE = #{jobDegree,jdbcType=VARCHAR},
+			</if>
+			<if test="jobContent != null">
+				JOB_CONTENT = #{jobContent,jdbcType=VARCHAR},
+			</if>
+			<if test="jobRange != null">
+				JOB_RANGE = #{jobRange,jdbcType=VARCHAR},
+			</if>
+			<if test="ismatch != null">
+				ISMATCH = #{ismatch,jdbcType=VARCHAR},
+			</if>
+			<if test="iscollection != null">
+				ISCOLLECTION = #{iscollection,jdbcType=VARCHAR},
+			</if>
+			<if test="isreport != null">
+				ISREPORT = #{isreport,jdbcType=VARCHAR},
+			</if>
+			<if test="header != null">
+				HEADER = #{header,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		REQUIREMENT_SPLIT
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+</mapper>

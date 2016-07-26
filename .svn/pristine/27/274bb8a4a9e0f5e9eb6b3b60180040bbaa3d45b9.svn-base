@@ -1,0 +1,140 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	String path = request.getContextPath();
+%>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>互联网数据采集平台</title>
+
+<!-- Bootstrap core CSS -->
+    <link href="<%=path%>/resources/css/new_version/bootstrap.min.css" rel="stylesheet">
+	<link href="<%=path%>/resources/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="<%=path%>/resources/css/new_version/site.css" rel="stylesheet">
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <script src="<%=path%>/resources/js/new_version/jquery.min.js"></script>
+    <script src="<%=path%>/resources/js/new_version/bootstrap.min.js"></script>
+     <script src="<%=path%>/resources/js/new_version/script.js"></script>
+     <script src="<%=path%>/resources/js/new_version/site.js"></script>
+	<script type="text/javascript" src="<%=path%>/resources/js/checkbox.js"></script>
+
+</head>
+<script type="text/javascript">
+	$(document).ready(function() {
+		//	alluser();
+	});
+	function deluser() {
+		if ($("input[name='chk_list']:checked").length > 0) {
+			if (confirm("确定删除选中项目吗？")) {
+				var del_id = '';
+				$("input[name='chk_list']:checked").each(function(val) {
+					del_id += $(this).val() + ";";
+				});
+				var url = "<%=path%>/datauser/userdel?id=" + del_id;
+				$.post(url, function(data) {
+					alert("删除完成！");
+					window.location.href = "<%=path%>/datauser/setuser";
+				}, "text");
+			}
+		} else {
+			alert("请选择一项进行删除！");
+		}
+	};
+	function update() {
+		if ($("input[name='chk_list']:checked").length == 1) {
+			window.location.href = "<%=path%>/datauser/user?t=2&id="
+					+ $("input[name='chk_list']:checked").val();
+		} else {
+			alert("请选择一项进行修改！");
+		}
+	}
+	function lockrole() {
+		var chk = $("input[name='chk_list']:checked");
+		var name = chk.parents("tr").children().eq(2).html();
+		var email = chk.parents("tr").children().eq(3).text();
+		if (chk.length == 1) {
+			window.location.href = "<%=path%>/datauser/userrole?id="
+					+ chk.val() + "&name=" + name + "&email=" + email;
+		} else {
+			alert("请选择一项进行修改！");
+		}
+	}
+</script>
+<body style="margin:0; padding:0">
+	<jsp:include page="../topBase.jsp"></jsp:include>
+  <!--内容开始-->
+    <div  class="content_waikuang">
+<div class="container-fluid search_select select-result" style="padding-left:0">
+<h2 class="content_title">${title}</h2>
+
+<div  class="renwu_caozuo"><a  class="renwu_select" href="<%=path%>/datauser/user?t=1&id=0">添加用户</a><a  class="renwu_select"  href="#" onclick="update()">修改用户</a><a  class="renwu_select" href="javascript:void(0)"  onclick="deluser()">删除用户</a><a  class="renwu_select" href="javascript:void(0)"  onclick="lockrole()">绑定角色</a> </div>
+
+<div class="container-fluid search_select select-result" style="padding-left:0; margin:0 auto">
+
+
+		<div class="table-responsive">
+		<form action="<%=path%>/datauser/setuser">
+			 <table class="table  table-striped content_rwgl" style="width: 100%;" >
+
+				<thead>
+					<tr>
+						<th><input type="checkbox" name="chk_all" id="chk_all"
+							onclick="SelectAll()" /></th>
+						<th>序号</th>
+						<th>姓名</th>
+						<th>邮箱</th>
+						<th>是否可用</th>
+						<th>用户名</th>
+						<th>绑定角色</th>
+						<th>注册时间</th>
+					</tr>
+				</thead>
+				
+				<tbody id="tbody">
+					<c:if test="${not empty accounts}">
+						<c:forEach var="account" items="${accounts}" varStatus="ts">
+							<tr>
+								<td><input type='checkbox' name='chk_list'
+									value='${account.id }'></td>
+								<td>${ts.index+1 }</td>
+								<td id='name' +ts>${account.name }</td>
+								<td id='email'>${account.email }</td>
+								<td><c:if test="${account.enable  ==0}">
+							  不可用
+							</c:if>
+									<c:if test="${account.enable  ==1}">
+							  可用
+							</c:if></td>
+								<td>${account.username}</td>
+								<td>${account.role.name}</td>
+								<td><fmt:formatDate value="${account.registertime}"
+										pattern="yyyy-MM-dd hh:mm:ss" /></td>
+							</tr>
+
+						</c:forEach>
+					</c:if>
+				</tbody>
+			</table>
+			</form>
+			<div  class="listtablebot">
+				${page.page.pageStr }
+			</div>
+			
+		</div>
+	</div>
+	</div>
+</div>
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+</body>
+</html>

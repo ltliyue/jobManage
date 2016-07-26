@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.demandAna.data_mapper.DemandAnalyseMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.demandAna.pojo.DemandAnalyse" >
+    <result column="DEMAND_ID" property="demandId" jdbcType="VARCHAR" />
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="RESULT_DESCRIPTION" property="resultDescription" jdbcType="VARCHAR" />
+    <result column="PRIORITY" property="priority" jdbcType="VARCHAR" />
+    <result column="SITE_ID" property="siteId" jdbcType="VARCHAR" />
+    <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
+    <result column="PUBLISHER" property="publisher" jdbcType="VARCHAR" />
+    <result column="PUBLISH_TIME" property="publishTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="TaskResultMap" type="inspur.crawl.taskManage.pojo.CrawlerTask">
+		<id column="TASK_ID" property="taskId" jdbcType="DECIMAL" />
+		<result column="TASK_NAME" property="taskName" jdbcType="VARCHAR" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="DECIMAL" />
+		<result column="CURRENT_INSTANCE" property="currentInstance"
+			jdbcType="VARCHAR" />
+		<result column="LAST_OPERATE_TIME" property="lastOperateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="TASK_DESCRIBE" property="taskDescribe"
+			jdbcType="VARCHAR" />
+		<result column="SITE_ID" property="siteId" jdbcType="VARCHAR" />
+	</resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    DEMAND_ID, ID, RESULT_DESCRIPTION, PRIORITY, SITE_ID, FILE_PATH, PUBLISHER, PUBLISH_TIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.demandAna.pojo.DemandAnalyseCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from CRAWLER_DEMAND_ANALYSE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from CRAWLER_DEMAND_ANALYSE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="inspur.crawl.demandAna.pojo.DemandAnalyseCriteria" >
+    delete from CRAWLER_DEMAND_ANALYSE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByDemandId" parameterType="java.lang.String">
+  	delete from CRAWLER_DEMAND_ANALYSE t where t.DEMAND_ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.demandAna.pojo.DemandAnalyse" >
+    insert into CRAWLER_DEMAND_ANALYSE (DEMAND_ID, ID, RESULT_DESCRIPTION,
+      PRIORITY, SITE_ID, FILE_PATH, 
+      PUBLISHER, PUBLISH_TIME)
+    values (#{demandId,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR}, #{resultDescription,jdbcType=VARCHAR}, 
+      #{priority,jdbcType=VARCHAR}, #{siteId,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
+      #{publisher,jdbcType=VARCHAR}, #{publishTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.demandAna.pojo.DemandAnalyse" >
+    insert into CRAWLER_DEMAND_ANALYSE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="demandId != null" >
+        DEMAND_ID,
+      </if>
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="resultDescription != null" >
+        RESULT_DESCRIPTION,
+      </if>
+      <if test="priority != null" >
+        PRIORITY,
+      </if>
+      <if test="siteId != null" >
+        SITE_ID,
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH,
+      </if>
+      <if test="publisher != null" >
+        PUBLISHER,
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="demandId != null" >
+        #{demandId,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="resultDescription != null" >
+        #{resultDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="priority != null" >
+        #{priority,jdbcType=VARCHAR},
+      </if>
+      <if test="siteId != null" >
+        #{siteId,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null" >
+        #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectByDemandId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select * from CRAWLER_DEMAND_ANALYSE t where t.DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectTasksByDemand" parameterType="java.lang.String" resultMap="TaskResultMap">
+  	select t1.* from crawler_demand_analyse t,crawler_task t1 where t.demand_id=#{demandId,jdbcType=VARCHAR} and t.site_id like '%'||t1.site_id||'%'
+  </select>
+  <select id="countByExample" parameterType="inspur.crawl.demandAna.pojo.DemandAnalyseCriteria" resultType="java.lang.Integer" >
+    select count(*) from CRAWLER_DEMAND_ANALYSE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CRAWLER_DEMAND_ANALYSE
+    <set >
+      <if test="record.demandId != null" >
+        DEMAND_ID = #{record.demandId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resultDescription != null" >
+        RESULT_DESCRIPTION = #{record.resultDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.priority != null" >
+        PRIORITY = #{record.priority,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteId != null" >
+        SITE_ID = #{record.siteId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filePath != null" >
+        FILE_PATH = #{record.filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publisher != null" >
+        PUBLISHER = #{record.publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publishTime != null" >
+        PUBLISH_TIME = #{record.publishTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateById">
+  	update CRAWLER_DEMAND_ANALYSE T
+  	set T.RESULT_DESCRIPTION = #{record.resultDescription,jdbcType=VARCHAR},
+      T.PRIORITY = #{record.priority,jdbcType=VARCHAR},
+      T.SITE_ID = #{record.siteId,jdbcType=VARCHAR},
+      T.FILE_PATH = #{record.filePath,jdbcType=VARCHAR},
+      T.PUBLISHER = #{record.publisher,jdbcType=VARCHAR},
+      T.PUBLISH_TIME = #{record.publishTime,jdbcType=TIMESTAMP}
+     where T.DEMAND_ID = #{record.demandId,jdbcType=VARCHAR}
+     and T.ID = #{record.id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CRAWLER_DEMAND_ANALYSE
+    set DEMAND_ID = #{record.demandId,jdbcType=VARCHAR},
+      ID = #{record.id,jdbcType=VARCHAR},
+      RESULT_DESCRIPTION = #{record.resultDescription,jdbcType=VARCHAR},
+      PRIORITY = #{record.priority,jdbcType=VARCHAR},
+      SITE_ID = #{record.siteId,jdbcType=VARCHAR},
+      FILE_PATH = #{record.filePath,jdbcType=VARCHAR},
+      PUBLISHER = #{record.publisher,jdbcType=VARCHAR},
+      PUBLISH_TIME = #{record.publishTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

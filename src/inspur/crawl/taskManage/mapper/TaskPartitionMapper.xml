@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.taskManage.mapper.TaskPartitionMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.taskManage.pojo.TaskPartitionKey" >
+    <id column="TASK_ID" property="taskId" jdbcType="DECIMAL" />
+    <id column="PARTITION_ID" property="partitionId" jdbcType="DECIMAL" />
+  </resultMap>
+  <insert id="insert" parameterType="inspur.crawl.taskManage.pojo.TaskPartitionKey" >
+    insert into CRAWLER_TASK_PARTITION (TASK_ID, PARTITION_ID)
+    values (#{taskId,jdbcType=DECIMAL}, #{partitionId,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.taskManage.pojo.TaskPartitionKey" >
+    insert into CRAWLER_TASK_PARTITION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="partitionId != null" >
+        PARTITION_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskId != null" >
+        #{taskId,jdbcType=DECIMAL},
+      </if>
+      <if test="partitionId != null" >
+        #{partitionId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectByTaskId" parameterType="java.lang.Long" resultType="java.lang.String" >
+    select wmsys.wm_concat(partition_id) from crawler_task_partition 
+    where task_id= #{taskId}
+  </select>
+  <select id="deleteByTaskId" parameterType="java.lang.Long" resultType="java.lang.Integer" >
+    delete from crawler_task_partition 
+    where task_id= #{taskId}
+  </select>
+</mapper>

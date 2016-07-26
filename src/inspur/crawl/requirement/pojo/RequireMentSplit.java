@@ -1,0 +1,339 @@
+package inspur.crawl.requirement.pojo;
+
+import inspur.crawl.common.interceptor.Page;
+
+public class RequireMentSplit {
+	private Integer id;
+	private String name;
+	private String content;
+	private String type;
+	private String planTime;
+	private String isalive;
+	private String jobFrequency;
+	private String jobDegree;
+	private String jobContent;
+	private String jobRange;
+	private String ismatch;
+	private String iscollection;
+	private String isreport;
+	private String rid;
+	
+	private String header;
+	private String status;
+	
+	private String properties;
+	private String customer;
+	private String proposeUser;
+	private String proposeTime;
+	private String requestTime;
+	
+	private String proposeTimeF;
+	private String proposeTimeT;
+	
+	private String requestTimeF;
+	private String requestTimeT;
+	
+	private String doTime;
+	private String doTimeF;
+	private String doTimeT;
+	
+	private String mpage;
+	
+	
+	
+	public String getMpage() {
+		return mpage;
+	}
+
+	public void setMpage(String mpage) {
+		this.mpage = mpage;
+	}
+
+	private String plantform;
+	
+	public String getPlantform() {
+		return plantform;
+	}
+
+	public void setPlantform(String plantform) {
+		this.plantform = plantform;
+	}
+
+	private Page page;
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
+	}
+
+	public String getHeader() {
+		return header;
+	}
+
+	public void setHeader(String header) {
+		this.header = header;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content == null ? null : content.trim();
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type == null ? null : type.trim();
+	}
+
+	public String getPlanTime() {
+		return planTime;
+	}
+
+	public void setPlanTime(String planTime) {
+		this.planTime = planTime == null ? null : planTime.trim();
+	}
+
+	public String getIsalive() {
+		return isalive;
+	}
+
+	public void setIsalive(String isalive) {
+		this.isalive = isalive == null ? null : isalive.trim();
+	}
+
+	public String getJobFrequency() {
+		return jobFrequency;
+	}
+
+	public void setJobFrequency(String jobFrequency) {
+		this.jobFrequency = jobFrequency == null ? null : jobFrequency.trim();
+	}
+
+	public String getJobDegree() {
+		return jobDegree;
+	}
+
+	public void setJobDegree(String jobDegree) {
+		this.jobDegree = jobDegree == null ? null : jobDegree.trim();
+	}
+
+	public String getJobContent() {
+		return jobContent;
+	}
+
+	public void setJobContent(String jobContent) {
+		this.jobContent = jobContent == null ? null : jobContent.trim();
+	}
+
+	public String getJobRange() {
+		return jobRange;
+	}
+
+	public void setJobRange(String jobRange) {
+		this.jobRange = jobRange == null ? null : jobRange.trim();
+	}
+
+
+
+	public String getIsmatch() {
+		return ismatch;
+	}
+
+	public void setIsmatch(String ismatch) {
+		this.ismatch = ismatch;
+	}
+
+	public String getIscollection() {
+		return iscollection;
+	}
+
+	public void setIscollection(String iscollection) {
+		this.iscollection = iscollection == null ? null : iscollection.trim();
+	}
+
+	public String getIsreport() {
+		return isreport;
+	}
+
+	public void setIsreport(String isreport) {
+		this.isreport = isreport == null ? null : isreport.trim();
+	}
+
+	public String getRid() {
+		return rid;
+	}
+
+	public void setRid(String rid) {
+		this.rid = rid;
+	}
+
+	public String getProperties() {
+		return properties;
+	}
+
+	public void setProperties(String properties) {
+		this.properties = properties;
+	}
+
+	public String getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(String customer) {
+		this.customer = customer;
+	}
+
+	public String getProposeUser() {
+		return proposeUser;
+	}
+
+	public void setProposeUser(String proposeUser) {
+		this.proposeUser = proposeUser;
+	}
+
+	public String getProposeTime() {
+		return proposeTime;
+	}
+
+	public void setProposeTime(String proposeTime) {
+		this.proposeTime = proposeTime;
+	}
+
+	public String getRequestTime() {
+		return requestTime;
+	}
+
+	public void setRequestTime(String requestTime) {
+		this.requestTime = requestTime;
+	}
+
+	public String getDoTime() {
+		return doTime;
+	}
+
+	public void setDoTime(String doTime) {
+		this.doTime = doTime;
+	}
+
+	public String getProposeTimeF() {
+		return proposeTimeF;
+	}
+
+	public void setProposeTimeF(String proposeTimeF) {
+		this.proposeTimeF = proposeTimeF;
+	}
+
+	public String getProposeTimeT() {
+		return proposeTimeT;
+	}
+
+	public void setProposeTimeT(String proposeTimeT) {
+		this.proposeTimeT = proposeTimeT;
+	}
+
+	public String getRequestTimeF() {
+		return requestTimeF;
+	}
+
+	public void setRequestTimeF(String requestTimeF) {
+		this.requestTimeF = requestTimeF;
+	}
+
+	public String getRequestTimeT() {
+		return requestTimeT;
+	}
+
+	public void setRequestTimeT(String requestTimeT) {
+		this.requestTimeT = requestTimeT;
+	}
+	
+	public String getDoTimeF() {
+		return doTimeF;
+	}
+
+	public void setDoTimeF(String doTimeF) {
+		this.doTimeF = doTimeF;
+	}
+
+	public String getDoTimeT() {
+		return doTimeT;
+	}
+
+	public void setDoTimeT(String doTimeT) {
+		this.doTimeT = doTimeT;
+	}
+
+	/**
+	 * 拷贝，将对象中的字段全部拷贝到子对象中
+	 * 
+	 * @param bean
+	 *            接收对象的子类
+	 * @return 拷贝完成后的子类
+	 */
+	public <T extends RequireMentSplit> T copy(T bean) {
+		bean.setId(getId());
+		bean.setName(getName());
+		bean.setContent(getContent());
+		bean.setType(getType());
+		bean.setPlanTime(getPlanTime());
+		bean.setIsalive(getIsalive());
+		bean.setJobFrequency(getJobFrequency());
+		bean.setJobDegree(getJobDegree());
+		bean.setJobContent(getJobContent());
+		bean.setJobRange(getJobRange());
+		bean.setIsmatch(getIsmatch());
+		bean.setIscollection(getIscollection());
+		bean.setIsreport(getIsreport());
+		bean.setRid(getRid());
+		return bean;
+	}
+
+	@Override
+	public String toString() {
+		return "RequireMentSplit [id=" + id + ", name=" + name + ", content=" + content + ", type=" + type + ", planTime=" + planTime + ", isalive=" + isalive + ", jobFrequency=" + jobFrequency
+				+ ", jobDegree=" + jobDegree + ", jobContent=" + jobContent + ", jobRange=" + jobRange + ", ismatch=" + ismatch + ", iscollection=" + iscollection + ", isreport=" + isreport
+				+ ", rid=" + rid + ", header=" + header + ", status=" + status + ", properties=" + properties + ", customer=" + customer + ", proposeUser=" + proposeUser + ", proposeTime="
+				+ proposeTime + ", requestTime=" + requestTime + ", doTime=" + doTime + ", page=" + page + ", getPage()=" + getPage() + ", getHeader()=" + getHeader() + ", getStatus()=" + getStatus()
+				+ ", getId()=" + getId() + ", getName()=" + getName() + ", getContent()=" + getContent() + ", getType()=" + getType() + ", getPlanTime()=" + getPlanTime() + ", getIsalive()="
+				+ getIsalive() + ", getJobFrequency()=" + getJobFrequency() + ", getJobDegree()=" + getJobDegree() + ", getJobContent()=" + getJobContent() + ", getJobRange()=" + getJobRange()
+				+ ", getIsmatch()=" + getIsmatch() + ", getIscollection()=" + getIscollection() + ", getIsreport()=" + getIsreport() + ", getRid()=" + getRid() + ", getProperties()="
+				+ getProperties() + ", getCustomer()=" + getCustomer() + ", getProposeUser()=" + getProposeUser() + ", getProposeTime()=" + getProposeTime() + ", getRequestTime()=" + getRequestTime()
+				+ ", getDoTime()=" + getDoTime() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+	}
+
+	
+
+	
+}

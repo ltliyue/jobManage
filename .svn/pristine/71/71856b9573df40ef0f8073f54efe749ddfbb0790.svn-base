@@ -1,0 +1,68 @@
+.kfselect{ border:1px solid #e3e3e3; margin-bottom:15px}
+.kfselect h1{ height:40px;  font:100 16px/40px "Î¢ÈíÑÅºÚ"; background:#f2f2f2; padding:0 0px; text-align:left}
+.kfptny_left{  min-height:500px;height:auto !important; float:left; margin:0px 0; }
+.leftArea h4{font-weight: bold;font-size: 14px; color: #999;}
+.leftArea p{
+	display: block;
+	font-size: 12px;
+	margin: 5px 0 10px 0;
+	height: 100%;
+}
+.leftArea li .sub a{
+	float: left;
+	text-decoration: none;
+	color: black;
+	margin-right: 5px;
+	white-space: nowrap;
+	width: 100%;
+	height:24px; line-height:24px;
+}
+.leftArea li .sub a:hover{
+	color: #104E8B;
+}
+.leftArea li{
+	cursor: pointer;
+	list-style-type:none;
+	border-bottom: 1px solid #dddddd;
+}
+.leftArea{
+	margin: 20px 0 20px 0;
+	font-family: "Microsoft YaHei";
+	width: 275px;
+	border-bottom: 0px solid #dddddd;
+}
+.leftArea h2{
+	position: relative;
+	font-size: 16px;
+	padding-left: 10px;
+	font-weight: normal;
+	color: #323131;
+	background: #f5f5f5;
+	height: 40px;
+	line-height: 40px;
+	border: 1px solid #dddddd;
+	padding-left: 20px;
+}
+.leftArea h2 span{
+	position: absolute;
+	right: 20px;
+	top: 17px;
+	display: block;
+	width: 16px;
+	height: 16px;
+}
+.leftArea h2 .ico-down{
+	background: url(../img/ico_down.png) no-repeat;
+}
+.leftArea h2 .ico-up{
+	display: none;
+	background: url(../img/ico_up.png) no-repeat;
+}
+.leftArea li .sub{
+	font-size: 14px;
+	display: none;
+	padding: 7px 15px;
+	border-top: 1px solid #dddddd;
+	border-left: 1px solid #dddddd;
+	border-right: 1px solid #dddddd;
+}

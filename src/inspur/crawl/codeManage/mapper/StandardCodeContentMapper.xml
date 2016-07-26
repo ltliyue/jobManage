@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.codeManage.mapper.StandardCodeContentMapper">
+	<resultMap id="BaseResultMap"
+		type="inspur.crawl.codeManage.pojo.StandardCodeContent">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="FIELD_CODE" property="fieldCode" jdbcType="VARCHAR" />
+		<result column="FIELD_NAME" property="fieldName" jdbcType="VARCHAR" />
+		<result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+		<result column="FIELD_DESCRIPTION" property="fieldDescription"
+			jdbcType="VARCHAR" />
+		<result column="PUBLISHER_ID" property="publisherId" jdbcType="VARCHAR" />
+		<result column="PUBLISH_TIME" property="publishTime" jdbcType="TIMESTAMP" />
+		<result column="VALIDATE_FLAG" property="validateFlag"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ID, FIELD_CODE, FIELD_NAME, PARENT_ID, FIELD_DESCRIPTION,
+		PUBLISHER_ID,
+		PUBLISH_TIME,
+		VALIDATE_FLAG
+	</sql>
+	<select id="selectBySiteId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+
+		select * 
+		from code_standard_content csc,
+		(SELECT
+		REGEXP_SUBSTR(field_id,'[^;]+',1,LEVEL,'i') AS csi_id FROM (
+		select
+		field_id from code_site_items where
+		site_id=#{siteId,jdbcType=VARCHAR})
+		CONNECT BY 
+		<![CDATA[ LEVEL<=LENGTH(field_id) ]]>
+		- LENGTH(REGEXP_REPLACE(field_id, ';',
+		'')) ) t where csc.id=t.csi_id
+		and
+		csc.validate_flag='1' order by FIELD_NAME
+
+	</select>
+
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.codeManage.pojo.StandardCodeContentCriteria">
+		<if test="skipCount > 0">
+			select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select
+			<include refid="Base_Column_List" />
+			from CODE_STANDARD_CONTENT
+			<if test="_parameter != null">
+				<include refid="Example_Where_Clause" />
+			</if>
+			<if test="orderByClause != null">
+				order by ${orderByClause}
+			</if>
+			) temp_table
+			<if test="top >= 0">
+        <![CDATA[ where rownum <= ${top} ]]>
+			</if>
+			) where rn>=${skipCount}
+		</if>
+		<if test="skipCount == 0">
+			<if test="top >= 0">
+				SELECT temp_table.*,ROWNUM rn from (
+			</if>
+			select
+			<include refid="Base_Column_List" />
+			from CODE_STANDARD_CONTENT
+			<if test="_parameter != null">
+				<include refid="Example_Where_Clause" />
+			</if>
+			<if test="orderByClause != null">
+				order by ${orderByClause}
+			</if>
+			<if test="top >= 0">
+				) temp_table <![CDATA[ where rownum <= ${top} ]]>
+			</if>
+		</if>
+	</select>
+	<select id="selectByNum" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from (select s.*,rownum rn from (select t.* from
+		CODE_STANDARD_CONTENT t where t.validate_flag='1' order by t.publish_time desc) s where #{endNum}>=
+		rownum) where rn > #{startNum}
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from CODE_STANDARD_CONTENT
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		CODE_STANDARD_CONTENT
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteByExample"
+		parameterType="inspur.crawl.codeManage.pojo.StandardCodeContentCriteria">
+		delete from CODE_STANDARD_CONTENT
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="inspur.crawl.codeManage.pojo.StandardCodeContent">
+		insert into
+		CODE_STANDARD_CONTENT (ID, FIELD_CODE, FIELD_NAME,
+		PARENT_ID,
+		FIELD_DESCRIPTION, PUBLISHER_ID,
+		PUBLISH_TIME, VALIDATE_FLAG)
+		values
+		(#{id,jdbcType=VARCHAR}, #{fieldCode,jdbcType=VARCHAR},
+		#{fieldName,jdbcType=VARCHAR},
+		#{parentId,jdbcType=VARCHAR},
+		#{fieldDescription,jdbcType=VARCHAR},
+		#{publisherId,jdbcType=VARCHAR},
+		#{publishTime,jdbcType=TIMESTAMP}, #{validateFlag,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="inspur.crawl.codeManage.pojo.StandardCodeContent">
+		insert into CODE_STANDARD_CONTENT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="fieldCode != null">
+				FIELD_CODE,
+			</if>
+			<if test="fieldName != null">
+				FIELD_NAME,
+			</if>
+			<if test="parentId != null">
+				PARENT_ID,
+			</if>
+			<if test="fieldDescription != null">
+				FIELD_DESCRIPTION,
+			</if>
+			<if test="publisherId != null">
+				PUBLISHER_ID,
+			</if>
+			<if test="publishTime != null">
+				PUBLISH_TIME,
+			</if>
+			<if test="validateFlag != null">
+				VALIDATE_FLAG,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldCode != null">
+				#{fieldCode,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldName != null">
+				#{fieldName,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldDescription != null">
+				#{fieldDescription,jdbcType=VARCHAR},
+			</if>
+			<if test="publisherId != null">
+				#{publisherId,jdbcType=VARCHAR},
+			</if>
+			<if test="publishTime != null">
+				#{publishTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="validateFlag != null">
+				#{validateFlag,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample"
+		parameterType="inspur.crawl.codeManage.pojo.StandardCodeContentCriteria"
+		resultType="java.lang.Integer">
+		select count(*) from CODE_STANDARD_CONTENT
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update CODE_STANDARD_CONTENT
+		<set>
+			<if test="record.id != null">
+				ID = #{record.id,jdbcType=VARCHAR},
+			</if>
+			<if test="record.fieldCode != null">
+				FIELD_CODE = #{record.fieldCode,jdbcType=VARCHAR},
+			</if>
+			<if test="record.fieldName != null">
+				FIELD_NAME = #{record.fieldName,jdbcType=VARCHAR},
+			</if>
+			<if test="record.parentId != null">
+				PARENT_ID = #{record.parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.fieldDescription != null">
+				FIELD_DESCRIPTION =
+				#{record.fieldDescription,jdbcType=VARCHAR},
+			</if>
+			<if test="record.publisherId != null">
+				PUBLISHER_ID = #{record.publisherId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.publishTime != null">
+				PUBLISH_TIME = #{record.publishTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.validateFlag != null">
+				VALIDATE_FLAG = #{record.validateFlag,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateById" parameterType="java.lang.String">
+		update
+		CODE_STANDARD_CONTENT
+		set VALIDATE_FLAG = '0'
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update CODE_STANDARD_CONTENT
+		set ID = #{record.id,jdbcType=VARCHAR},
+		FIELD_CODE = #{record.fieldCode,jdbcType=VARCHAR},
+		FIELD_NAME =
+		#{record.fieldName,jdbcType=VARCHAR},
+		PARENT_ID =
+		#{record.parentId,jdbcType=VARCHAR},
+		FIELD_DESCRIPTION =
+		#{record.fieldDescription,jdbcType=VARCHAR},
+		PUBLISHER_ID =
+		#{record.publisherId,jdbcType=VARCHAR},
+		PUBLISH_TIME =
+		#{record.publishTime,jdbcType=TIMESTAMP},
+		VALIDATE_FLAG =
+		#{record.validateFlag,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.codeManage.pojo.StandardCodeContent">
+		update CODE_STANDARD_CONTENT
+		<set>
+			<if test="fieldCode != null">
+				FIELD_CODE = #{fieldCode,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldName != null">
+				FIELD_NAME = #{fieldName,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				PARENT_ID = #{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldDescription != null">
+				FIELD_DESCRIPTION = #{fieldDescription,jdbcType=VARCHAR},
+			</if>
+			<if test="publisherId != null">
+				PUBLISHER_ID = #{publisherId,jdbcType=VARCHAR},
+			</if>
+			<if test="publishTime != null">
+				PUBLISH_TIME = #{publishTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="validateFlag != null">
+				VALIDATE_FLAG = #{validateFlag,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="inspur.crawl.codeManage.pojo.StandardCodeContent">
+		update
+		CODE_STANDARD_CONTENT
+		set FIELD_CODE = #{fieldCode,jdbcType=VARCHAR},
+		FIELD_NAME = #{fieldName,jdbcType=VARCHAR},
+		PARENT_ID =
+		#{parentId,jdbcType=VARCHAR},
+		FIELD_DESCRIPTION =
+		#{fieldDescription,jdbcType=VARCHAR},
+		PUBLISHER_ID =
+		#{publisherId,jdbcType=VARCHAR},
+		PUBLISH_TIME =
+		#{publishTime,jdbcType=TIMESTAMP},
+		VALIDATE_FLAG =
+		#{validateFlag,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

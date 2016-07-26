@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+  <classPathEntry location="D:\work\MyCode\GitCode\crawManage\WebRoot\WEB-INF\lib\ojdbc14.jar" />
+
+  <context id="DB2Tables" targetRuntime="MyBatis3">
+  	<plugin type="inspur.crawl.common.generator.MyPlus" /> 
+  	 
+  	<plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">  
+	    <property name="searchString" value="Example$" />  
+	    <property name="replaceString" value="Criteria" />  
+	</plugin>
+	
+	<commentGenerator>
+  		<property name="suppressDate" value="true" />
+  		<property name="suppressAllComments" value="true" />
+	</commentGenerator>
+	
+    <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+        connectionURL="jdbc:oracle:thin:@60.208.102.69:1521:tmsjcj"
+        userId="crawlm"
+        password="crawlm">
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+    <javaModelGenerator targetPackage="inspur.crawl.codeManage.pojo" targetProject="e:\src">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+    
+    <sqlMapGenerator targetPackage="inspur.crawl.codeManage.mapper"  targetProject="e:\src">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+    <javaClientGenerator type="XMLMAPPER" targetPackage="inspur.crawl.codeManage.mapper"  targetProject="e:\src">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+    <table domainObjectName="OralceKeyWords" tableName="ORACLE_KEYWORDS" >
+<!--    	<columnOverride column="name" javaType="inspur.drodata.common.lb.enums.EnableEnum" typeHandler="inspur.drodata.common.lb.enums.EnableEnumHandler"></columnOverride>-->
+    </table>
+  </context>
+  
+</generatorConfiguration>
+

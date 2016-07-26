@@ -1,0 +1,5 @@
+bootstrap.servers=peng:9092,qing:9092,dan:9092,tan:9092,mei:9092
+acks=1
+key.serializer=org.apache.kafka.common.serialization.StringSerializer
+value.serializer=com.inspur.kafka.helpers.AvroSerializer
+compression.type=snappy

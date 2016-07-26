@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  -->
+<mapper namespace="inspur.crawl.diagnoseCrawl.mapper.DiagnoseCrawlMapper">
+  <resultMap id="BaseResultMap" type="inspur.crawl.diagnoseCrawl.pojo.TaskAndTaskInstance" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="task_id" jdbcType="VARCHAR" />
+    <result column="INSTANCE_ID" property="instance_id" jdbcType="VARCHAR" />
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="TASK_NAME" property="task_name" jdbcType="VARCHAR" />
+  </resultMap>
+    <select id="getInstanceID" resultMap="BaseResultMap" resultType="java.util.HashMap" >
+        select instance_id,publish_time from crawler_task_instance where task_id= #{task_id,jdbcType=VARCHAR} and stage=0 order by publish_time
+    </select>
+    <select id="getRule" resultMap="BaseResultMap" resultType="java.util.HashMap" >
+        select id,name from parse_rule_temp where task_id= #{task_id,jdbcType=VARCHAR}
+    </select>
+    <select id="getDetail" resultMap="BaseResultMap" resultType="java.util.HashMap" >
+   		 select b.id,b.name,a.task_name,a.task_id from crawler_task a,parse_rule_temp b where a.task_id=b.task_id  and b.id= #{rule_id,jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.demandAna.mapper.CrawlerDemandDeliveryMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.demandAna.pojo.CrawlerDemandDelivery" >
+    <id column="DEMAND_ID" property="demandId" jdbcType="VARCHAR" />
+    <id column="SITE_ID" property="siteId" jdbcType="VARCHAR" />
+    <id column="FIELD_ID" property="fieldId" jdbcType="VARCHAR" />
+    <result column="FIELD_NAME" property="fieldName" jdbcType="VARCHAR" />
+    <result column="CONDITION_DES" property="conditionDes" jdbcType="VARCHAR" />
+    <result column="CONDITION_VAL" property="conditionVal" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    DEMAND_ID, SITE_ID, FIELD_ID, FIELD_NAME, CONDITION_DES, CONDITION_VAL
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandDeliveryCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from CRAWLER_DEMAND_DELIVERY
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from CRAWLER_DEMAND_DELIVERY
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandDeliveryKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from CRAWLER_DEMAND_DELIVERY
+    where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+      and SITE_ID = #{siteId,jdbcType=VARCHAR}
+      and FIELD_ID = #{fieldId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectBySiteIdAndDemandId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from CRAWLER_DEMAND_DELIVERY
+  	where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+      and SITE_ID = #{siteId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandDeliveryKey" >
+    delete from CRAWLER_DEMAND_DELIVERY
+    where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+      and SITE_ID = #{siteId,jdbcType=VARCHAR}
+      and FIELD_ID = #{fieldId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByDemandAndSiteId" parameterType="java.lang.String">
+  	delete from CRAWLER_DEMAND_DELIVERY
+    where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+      and SITE_ID = #{siteId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandDeliveryCriteria" >
+    delete from CRAWLER_DEMAND_DELIVERY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandDelivery" >
+    insert into CRAWLER_DEMAND_DELIVERY (DEMAND_ID, SITE_ID, FIELD_ID, 
+      FIELD_NAME, CONDITION_DES, CONDITION_VAL
+      )
+    values (#{demandId,jdbcType=VARCHAR}, #{siteId,jdbcType=VARCHAR}, #{fieldId,jdbcType=VARCHAR}, 
+      #{fieldName,jdbcType=VARCHAR}, #{conditionDes,jdbcType=VARCHAR}, #{conditionVal,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandDelivery" >
+    insert into CRAWLER_DEMAND_DELIVERY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="demandId != null" >
+        DEMAND_ID,
+      </if>
+      <if test="siteId != null" >
+        SITE_ID,
+      </if>
+      <if test="fieldId != null" >
+        FIELD_ID,
+      </if>
+      <if test="fieldName != null" >
+        FIELD_NAME,
+      </if>
+      <if test="conditionDes != null" >
+        CONDITION_DES,
+      </if>
+      <if test="conditionVal != null" >
+        CONDITION_VAL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="demandId != null" >
+        #{demandId,jdbcType=VARCHAR},
+      </if>
+      <if test="siteId != null" >
+        #{siteId,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldId != null" >
+        #{fieldId,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldName != null" >
+        #{fieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="conditionDes != null" >
+        #{conditionDes,jdbcType=VARCHAR},
+      </if>
+      <if test="conditionVal != null" >
+        #{conditionVal,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandDeliveryCriteria" resultType="java.lang.Integer" >
+    select count(*) from CRAWLER_DEMAND_DELIVERY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CRAWLER_DEMAND_DELIVERY
+    <set >
+      <if test="record.demandId != null" >
+        DEMAND_ID = #{record.demandId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteId != null" >
+        SITE_ID = #{record.siteId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fieldId != null" >
+        FIELD_ID = #{record.fieldId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fieldName != null" >
+        FIELD_NAME = #{record.fieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.conditionDes != null" >
+        CONDITION_DES = #{record.conditionDes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.conditionVal != null" >
+        CONDITION_VAL = #{record.conditionVal,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CRAWLER_DEMAND_DELIVERY
+    set DEMAND_ID = #{record.demandId,jdbcType=VARCHAR},
+      SITE_ID = #{record.siteId,jdbcType=VARCHAR},
+      FIELD_ID = #{record.fieldId,jdbcType=VARCHAR},
+      FIELD_NAME = #{record.fieldName,jdbcType=VARCHAR},
+      CONDITION_DES = #{record.conditionDes,jdbcType=VARCHAR},
+      CONDITION_VAL = #{record.conditionVal,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandDelivery" >
+    update CRAWLER_DEMAND_DELIVERY
+    <set >
+      <if test="fieldName != null" >
+        FIELD_NAME = #{fieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="conditionDes != null" >
+        CONDITION_DES = #{conditionDes,jdbcType=VARCHAR},
+      </if>
+      <if test="conditionVal != null" >
+        CONDITION_VAL = #{conditionVal,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+      and SITE_ID = #{siteId,jdbcType=VARCHAR}
+      and FIELD_ID = #{fieldId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandDelivery" >
+    update CRAWLER_DEMAND_DELIVERY
+    set FIELD_NAME = #{fieldName,jdbcType=VARCHAR},
+      CONDITION_DES = #{conditionDes,jdbcType=VARCHAR},
+      CONDITION_VAL = #{conditionVal,jdbcType=VARCHAR}
+    where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+      and SITE_ID = #{siteId,jdbcType=VARCHAR}
+      and FIELD_ID = #{fieldId,jdbcType=VARCHAR}
+  </update>
+</mapper>

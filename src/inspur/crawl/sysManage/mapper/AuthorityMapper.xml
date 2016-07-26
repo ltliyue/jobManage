@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.sysManage.mapper.AuthorityMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.sysManage.pojo.Authority" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="DECIMAL" />
+    <result column="ENABLE" property="enable" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="LEVELCODE" property="levelcode" jdbcType="VARCHAR" />
+    <result column="POSITION" property="position" jdbcType="DECIMAL" />
+    <result column="THEVALUE" property="thevalue" jdbcType="VARCHAR" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="MATCHURL" property="matchurl" jdbcType="VARCHAR" />
+    <result column="ITEMICON" property="itemicon" jdbcType="VARCHAR" />
+    <result column="PARENTID" property="parentid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, VERSION, ENABLE, NAME, LEVELCODE, POSITION, THEVALUE, URL, MATCHURL, ITEMICON, 
+    PARENTID
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.sysManage.pojo.AuthorityCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from AUTHORITY
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from AUTHORITY
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  <select id="selectCd" resultMap="BaseResultMap" parameterType="inspur.crawl.sysManage.pojo.AuthorityCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from AUTHORITY
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from AUTHORITY
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="inspur.crawl.sysManage.pojo.AuthorityCriteria" >
+    delete from AUTHORITY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.sysManage.pojo.Authority" >
+    insert into AUTHORITY (ID, VERSION, ENABLE, 
+      NAME, LEVELCODE, POSITION, 
+      THEVALUE, URL, MATCHURL, 
+      ITEMICON, PARENTID)
+    values (#{id,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{enable,jdbcType=DECIMAL}, 
+      #{name,jdbcType=VARCHAR}, #{levelcode,jdbcType=VARCHAR}, #{position,jdbcType=DECIMAL}, 
+      #{thevalue,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{matchurl,jdbcType=VARCHAR}, 
+      #{itemicon,jdbcType=VARCHAR}, #{parentid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.sysManage.pojo.Authority" >
+    insert into AUTHORITY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="version != null" >
+        VERSION,
+      </if>
+      <if test="enable != null" >
+        ENABLE,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="levelcode != null" >
+        LEVELCODE,
+      </if>
+      <if test="position != null" >
+        POSITION,
+      </if>
+      <if test="thevalue != null" >
+        THEVALUE,
+      </if>
+      <if test="url != null" >
+        URL,
+      </if>
+      <if test="matchurl != null" >
+        MATCHURL,
+      </if>
+      <if test="itemicon != null" >
+        ITEMICON,
+      </if>
+      <if test="parentid != null" >
+        PARENTID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="levelcode != null" >
+        #{levelcode,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=DECIMAL},
+      </if>
+      <if test="thevalue != null" >
+        #{thevalue,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="matchurl != null" >
+        #{matchurl,jdbcType=VARCHAR},
+      </if>
+      <if test="itemicon != null" >
+        #{itemicon,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null" >
+        #{parentid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.sysManage.pojo.AuthorityCriteria" resultType="java.lang.Integer" >
+    select count(*) from AUTHORITY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update AUTHORITY
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        VERSION = #{record.version,jdbcType=DECIMAL},
+      </if>
+      <if test="record.enable != null" >
+        ENABLE = #{record.enable,jdbcType=DECIMAL},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.levelcode != null" >
+        LEVELCODE = #{record.levelcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.position != null" >
+        POSITION = #{record.position,jdbcType=DECIMAL},
+      </if>
+      <if test="record.thevalue != null" >
+        THEVALUE = #{record.thevalue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null" >
+        URL = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.matchurl != null" >
+        MATCHURL = #{record.matchurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.itemicon != null" >
+        ITEMICON = #{record.itemicon,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentid != null" >
+        PARENTID = #{record.parentid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update AUTHORITY
+    set ID = #{record.id,jdbcType=VARCHAR},
+      VERSION = #{record.version,jdbcType=DECIMAL},
+      ENABLE = #{record.enable,jdbcType=DECIMAL},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      LEVELCODE = #{record.levelcode,jdbcType=VARCHAR},
+      POSITION = #{record.position,jdbcType=DECIMAL},
+      THEVALUE = #{record.thevalue,jdbcType=VARCHAR},
+      URL = #{record.url,jdbcType=VARCHAR},
+      MATCHURL = #{record.matchurl,jdbcType=VARCHAR},
+      ITEMICON = #{record.itemicon,jdbcType=VARCHAR},
+      PARENTID = #{record.parentid,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+   <update id="updatePosition" parameterType="map" >
+    update AUTHORITY
+    set 
+      POSITION = POSITION+1 where POSITION >=${position}
+     
+  </update>
+</mapper>

@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.ruleManage.mapper.PageExtractRuleMapper">
+	<resultMap id="BaseResultMap" type="inspur.crawl.ruleManage.pojo.PageExtractRule">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+		<result column="URL_PATTERN" property="urlPattern" jdbcType="VARCHAR" />
+		<result column="TIME" property="time" jdbcType="TIMESTAMP" />
+		<result column="ENABLED" property="enabled" jdbcType="DECIMAL" />
+		<result column="CONTAINS_MULTI" property="containsMulti"
+			jdbcType="DECIMAL" />
+		<result column="MULTI_ROW_XPATH" property="multiRowXpath"
+			jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="TEST_URL" property="testUrl" jdbcType="VARCHAR" />
+		 <result column="EXTRACT_TYPE" property="extractType" jdbcType="DECIMAL" />
+    	<result column="JAR_PATH" property="jarPath" jdbcType="VARCHAR" />
+    	<result column="CLASS_NAME" property="className" jdbcType="VARCHAR" />
+		</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ID, NAME, TASK_ID, URL_PATTERN, TIME, ENABLED,
+		CONTAINS_MULTI,
+		MULTI_ROW_XPATH, CREATOR,
+		TEST_URL,EXTRACT_TYPE, JAR_PATH, CLASS_NAME
+	</sql>
+
+	<select id="listPageBySearch" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from PAGE_EXTRACT_RULE t
+		<where>
+			<if test="record.name != null and record.name!=''">
+				(
+				NAME like CONCAT(CONCAT('%', #{record.name}),'%')
+				)
+			</if>
+			<if test="record.taskId != null and record.taskId!=''">
+				and task_id = #{record.taskId}
+			</if>
+			<if test="record.containsMulti!=null and record.containsMulti >0">
+				and contains_multi = #{record.containsMulti}
+			</if>
+		</where>
+		order by time desc
+	</select>
+	
+	<select id="listPage" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.ruleManage.pojo.PageExtractRuleCriteria">
+		select * from PAGE_EXTRACT_RULE order by NAME desc
+	</select>
+
+	<select id="listPageByTaskId" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.ruleManage.pojo.PageExtractRuleCriteria">
+		select * from PAGE_EXTRACT_RULE where TASK_ID=#{taskId}
+		order by NAME desc
+	</select>
+
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.ruleManage.pojo.PageExtractRuleCriteria">
+		<if test="skipCount > 0">
+			select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select
+			<include refid="Base_Column_List" />
+			from PAGE_EXTRACT_RULE
+			<if test="_parameter != null">
+				<include refid="Example_Where_Clause" />
+			</if>
+			<if test="orderByClause != null">
+				order by ${orderByClause}
+			</if>
+			) temp_table
+			<if test="top >= 0">
+        <![CDATA[ where rownum <= ${top} ]]>
+			</if>
+			) where rn>=${skipCount}
+		</if>
+		<if test="skipCount == 0">
+			<if test="top >= 0">
+				SELECT temp_table.*,ROWNUM rn from (
+			</if>
+			select
+			<include refid="Base_Column_List" />
+			from PAGE_EXTRACT_RULE
+			<if test="_parameter != null">
+				<include refid="Example_Where_Clause" />
+			</if>
+			<if test="orderByClause != null">
+				order by ${orderByClause}
+			</if>
+			<if test="top >= 0">
+				) temp_table <![CDATA[ where rownum <= ${top} ]]>
+			</if>
+		</if>
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from PAGE_EXTRACT_RULE
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		PAGE_EXTRACT_RULE
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteByExample"
+		parameterType="inspur.crawl.ruleManage.pojo.PageExtractRuleCriteria">
+		delete from PAGE_EXTRACT_RULE
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="inspur.crawl.ruleManage.pojo.PageExtractRule" >
+    insert into PAGE_EXTRACT_RULE (ID, NAME, TASK_ID, 
+      URL_PATTERN, TIME, ENABLED, 
+      CONTAINS_MULTI, MULTI_ROW_XPATH, CREATOR, 
+      TEST_URL, EXTRACT_TYPE, JAR_PATH, 
+      CLASS_NAME)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
+      #{urlPattern,jdbcType=VARCHAR}, #{time,jdbcType=DATE}, #{enabled,jdbcType=DECIMAL}, 
+      #{containsMulti,jdbcType=DECIMAL}, #{multiRowXpath,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{testUrl,jdbcType=VARCHAR}, #{extractType,jdbcType=DECIMAL}, #{jarPath,jdbcType=VARCHAR}, 
+      #{className,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.ruleManage.pojo.PageExtractRule" >
+    insert into PAGE_EXTRACT_RULE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="urlPattern != null" >
+        URL_PATTERN,
+      </if>
+      <if test="time != null" >
+        TIME,
+      </if>
+      <if test="enabled != null" >
+        ENABLED,
+      </if>
+      <if test="containsMulti != null" >
+        CONTAINS_MULTI,
+      </if>
+      <if test="multiRowXpath != null" >
+        MULTI_ROW_XPATH,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="testUrl != null" >
+        TEST_URL,
+      </if>
+      <if test="extractType != null" >
+        EXTRACT_TYPE,
+      </if>
+      <if test="jarPath != null" >
+        JAR_PATH,
+      </if>
+      <if test="className != null" >
+        CLASS_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="urlPattern != null" >
+        #{urlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=DATE},
+      </if>
+      <if test="enabled != null" >
+        #{enabled,jdbcType=DECIMAL},
+      </if>
+      <if test="containsMulti != null" >
+        #{containsMulti,jdbcType=DECIMAL},
+      </if>
+      <if test="multiRowXpath != null" >
+        #{multiRowXpath,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="testUrl != null" >
+        #{testUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="extractType != null" >
+        #{extractType,jdbcType=DECIMAL},
+      </if>
+      <if test="jarPath != null" >
+        #{jarPath,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        #{className,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.ruleManage.pojo.PageExtractRuleCriteria" resultType="java.lang.Integer" >
+    select count(*) from PAGE_EXTRACT_RULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PAGE_EXTRACT_RULE
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskId != null" >
+        TASK_ID = #{record.taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urlPattern != null" >
+        URL_PATTERN = #{record.urlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="record.time != null" >
+        TIME = #{record.time,jdbcType=DATE},
+      </if>
+      <if test="record.enabled != null" >
+        ENABLED = #{record.enabled,jdbcType=DECIMAL},
+      </if>
+      <if test="record.containsMulti != null" >
+        CONTAINS_MULTI = #{record.containsMulti,jdbcType=DECIMAL},
+      </if>
+      <if test="record.multiRowXpath != null" >
+        MULTI_ROW_XPATH = #{record.multiRowXpath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creator != null" >
+        CREATOR = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.testUrl != null" >
+        TEST_URL = #{record.testUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.extractType != null" >
+        EXTRACT_TYPE = #{record.extractType,jdbcType=DECIMAL},
+      </if>
+      <if test="record.jarPath != null" >
+        JAR_PATH = #{record.jarPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.className != null" >
+        CLASS_NAME = #{record.className,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PAGE_EXTRACT_RULE
+    set ID = #{record.id,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      TASK_ID = #{record.taskId,jdbcType=VARCHAR},
+      URL_PATTERN = #{record.urlPattern,jdbcType=VARCHAR},
+      TIME = #{record.time,jdbcType=DATE},
+      ENABLED = #{record.enabled,jdbcType=DECIMAL},
+      CONTAINS_MULTI = #{record.containsMulti,jdbcType=DECIMAL},
+      MULTI_ROW_XPATH = #{record.multiRowXpath,jdbcType=VARCHAR},
+      CREATOR = #{record.creator,jdbcType=VARCHAR},
+      TEST_URL = #{record.testUrl,jdbcType=VARCHAR},
+      EXTRACT_TYPE = #{record.extractType,jdbcType=DECIMAL},
+      JAR_PATH = #{record.jarPath,jdbcType=VARCHAR},
+      CLASS_NAME = #{record.className,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.ruleManage.pojo.PageExtractRule" >
+    update PAGE_EXTRACT_RULE
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="urlPattern != null" >
+        URL_PATTERN = #{urlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        TIME = #{time,jdbcType=DATE},
+      </if>
+      <if test="enabled != null" >
+        ENABLED = #{enabled,jdbcType=DECIMAL},
+      </if>
+      <if test="containsMulti != null" >
+        CONTAINS_MULTI = #{containsMulti,jdbcType=DECIMAL},
+      </if>
+      <if test="multiRowXpath != null" >
+        MULTI_ROW_XPATH = #{multiRowXpath,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        CREATOR = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="testUrl != null" >
+        TEST_URL = #{testUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="extractType != null" >
+        EXTRACT_TYPE = #{extractType,jdbcType=DECIMAL},
+      </if>
+      <if test="jarPath != null" >
+        JAR_PATH = #{jarPath,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        CLASS_NAME = #{className,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="inspur.crawl.ruleManage.pojo.PageExtractRule" >
+    update PAGE_EXTRACT_RULE
+    set NAME = #{name,jdbcType=VARCHAR},
+      TASK_ID = #{taskId,jdbcType=VARCHAR},
+      URL_PATTERN = #{urlPattern,jdbcType=VARCHAR},
+      TIME = #{time,jdbcType=DATE},
+      ENABLED = #{enabled,jdbcType=DECIMAL},
+      CONTAINS_MULTI = #{containsMulti,jdbcType=DECIMAL},
+      MULTI_ROW_XPATH = #{multiRowXpath,jdbcType=VARCHAR},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      TEST_URL = #{testUrl,jdbcType=VARCHAR},
+      EXTRACT_TYPE = #{extractType,jdbcType=DECIMAL},
+      JAR_PATH = #{jarPath,jdbcType=VARCHAR},
+      CLASS_NAME = #{className,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.taskManage.mapper.CrawlerTaskMapper">
+	<resultMap id="BaseResultMap" type="inspur.crawl.taskManage.pojo.CrawlerTask">
+		<id column="TASK_ID" property="taskId" jdbcType="DECIMAL" />
+		<result column="TASK_NAME" property="taskName" jdbcType="VARCHAR" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="DECIMAL" />
+		<result column="CURRENT_INSTANCE" property="currentInstance"
+			jdbcType="VARCHAR" />
+		<result column="LAST_OPERATE_TIME" property="lastOperateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="TASK_DESCRIBE" property="taskDescribe"
+			jdbcType="VARCHAR" />
+		<result column="SITE_ID" property="siteId" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id='TASK_ID_SEQUENCE'>TASK_ID_SEQUENCE.nextval</sql>
+	<sql id="Base_Column_List">
+		TASK_ID, TASK_NAME, URL, STATUS, CURRENT_INSTANCE, LAST_OPERATE_TIME,
+		CREATE_TIME,
+		CREATOR, TASK_DESCRIBE, SITE_ID
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from CRAWLER_TASK
+		where TASK_ID = #{taskId,jdbcType=DECIMAL}
+	</select>
+
+	<select id="getTaskIdByInstaceId" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select
+		UNIQUE(TASK_ID)
+		from CRAWLER_TASK_INSTANCE
+		where INSTANCE_ID = #{InstanceId,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from CRAWLER_TASK
+		where TASK_ID = #{taskId,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert" parameterType="inspur.crawl.taskManage.pojo.CrawlerTask">
+		<selectKey keyProperty="taskId" resultType="java.lang.Long"
+			order="BEFORE">
+			select
+			<include refid="TASK_ID_SEQUENCE" />
+			as taskId from dual
+		</selectKey>
+		insert into CRAWLER_TASK (TASK_ID, TASK_NAME, URL,
+		STATUS, CURRENT_INSTANCE, LAST_OPERATE_TIME,
+		CREATE_TIME, CREATOR, TASK_DESCRIBE,
+		SITE_ID)
+		values (#{taskId,jdbcType=DECIMAL}, #{taskName,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR},
+		#{status,jdbcType=DECIMAL}, #{currentInstance,jdbcType=VARCHAR},
+		#{lastOperateTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
+		#{taskDescribe,jdbcType=VARCHAR},
+		#{siteId,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="inspur.crawl.taskManage.pojo.CrawlerTask">
+		insert into CRAWLER_TASK
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="taskId != null">
+				TASK_ID,
+			</if>
+			<if test="taskName != null">
+				TASK_NAME,
+			</if>
+			<if test="url != null">
+				URL,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="currentInstance != null">
+				CURRENT_INSTANCE,
+			</if>
+			<if test="lastOperateTime != null">
+				LAST_OPERATE_TIME,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="creator != null">
+				CREATOR,
+			</if>
+			<if test="taskDescribe != null">
+				TASK_DESCRIBE,
+			</if>
+			<if test="siteId != null">
+				SITE_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="taskId != null">
+				#{taskId,jdbcType=DECIMAL},
+			</if>
+			<if test="taskName != null">
+				#{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=DECIMAL},
+			</if>
+			<if test="currentInstance != null">
+				#{currentInstance,jdbcType=VARCHAR},
+			</if>
+			<if test="lastOperateTime != null">
+				#{lastOperateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="taskDescribe != null">
+				#{taskDescribe,jdbcType=VARCHAR},
+			</if>
+			<if test="siteId != null">
+				#{siteId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.taskManage.pojo.CrawlerTask">
+		update CRAWLER_TASK
+		<set>
+			<if test="taskName != null">
+				TASK_NAME = #{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				URL = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="currentInstance != null">
+				CURRENT_INSTANCE = #{currentInstance,jdbcType=VARCHAR},
+			</if>
+			<if test="lastOperateTime != null">
+				LAST_OPERATE_TIME = #{lastOperateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				CREATOR = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="taskDescribe != null">
+				TASK_DESCRIBE = #{taskDescribe,jdbcType=VARCHAR},
+			</if>
+			<if test="siteId != null">
+				SITE_ID = #{siteId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TASK_ID = #{taskId,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="inspur.crawl.taskManage.pojo.CrawlerTask">
+		update CRAWLER_TASK
+		set TASK_NAME = #{taskName,jdbcType=VARCHAR},
+		URL = #{url,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=DECIMAL},
+		CURRENT_INSTANCE = #{currentInstance,jdbcType=VARCHAR},
+		LAST_OPERATE_TIME = #{lastOperateTime,jdbcType=TIMESTAMP},
+		CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+		CREATOR = #{creator,jdbcType=VARCHAR},
+		TASK_DESCRIBE = #{taskDescribe,jdbcType=VARCHAR},
+		SITE_ID = #{siteId,jdbcType=VARCHAR}
+		where TASK_ID = #{taskId,jdbcType=DECIMAL}
+	</update>
+	<!-- 废弃删除任务 -->
+	<update id="abolishTask" parameterType="java.lang.Long">
+		update CRAWLER_TASK
+		set status = #{status},LAST_OPERATE_TIME = sysdate
+		where TASK_ID = #{taskId,jdbcType=DECIMAL}
+	</update>
+	<select id="listPageTask" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from CRAWLER_TASK t
+		<where>
+			<if test="task.taskName != null and task.taskName!=''">
+				( 
+					TASK_NAME like CONCAT(CONCAT('%', #{task.taskName}),'%') 
+					or URL like CONCAT(CONCAT('%', #{task.taskName}),'%')
+					or to_char(TASK_ID)=#{task.taskName}
+				)
+			</if>
+			<if test="task.status != null">
+				and STATUS = #{task.status}
+			</if>
+			<if test="task.period != null">
+				and exists(select 1 from CRAWLER_TASK_CONFIG c where t.TASK_ID=c.TASK_ID and c.PERIOD=#{task.period} )
+			</if>
+			<if test="task.demandId != null and task.demandId !=''">
+				and exists (select 1 from crawler_demand_analyse a 
+							where a.demand_id = #{task.demandId}
+  							and INSTR(a.site_id, t.site_id) > 0)
+			</if>
+		</where>
+		order by last_operate_time desc
+	</select>
+	<select id="countByStatus" parameterType="inspur.crawl.taskManage.pojo.CrawlerTask"
+		resultType="map">
+		select status,count(1) as count from CRAWLER_TASK t
+		<where>
+			<if test="task.taskName != null and task.taskName!=''">
+				( 
+					TASK_NAME like CONCAT(CONCAT('%', #{task.taskName}),'%') 
+					or URL like CONCAT(CONCAT('%', #{task.taskName}),'%')
+				)
+			</if>
+			<if test="task.period != null">
+				and exists(select 1 from CRAWLER_TASK_CONFIG c where t.TASK_ID=c.TASK_ID and c.PERIOD=#{task.period} )
+			</if>
+		</where>
+		group by status
+	</select>
+	<select id="countByPeriod" parameterType="inspur.crawl.taskManage.pojo.CrawlerTask"
+		resultType="map">
+		select period,count(1) as count from crawler_task_config c
+		where 
+		period is not null
+		and exists(select 1 from crawler_task t where t.task_id=c.task_id
+			<if test="task.taskName != null and task.taskName!=''">
+				and ( 
+					t.TASK_NAME like CONCAT(CONCAT('%', #{task.taskName}),'%') 
+					or t.URL like CONCAT(CONCAT('%', #{task.taskName}),'%')
+				)
+			</if>
+			<if test="task.status != null">
+				and t.STATUS = #{task.status}
+			</if>
+		)
+		group by period
+	</select>
+	<select id="selectScheduledTask" resultMap="BaseResultMap">
+		<![CDATA[
+			select distinct t.* from crawler_task t
+			left join crawler_task_instance i
+			on t.current_instance=i.instance_id
+			left join crawler_task_config c  
+			on i.task_id=c.task_id 
+			where c.period is not null
+			and t.status in(1,2)
+			and (
+			(c.period=2 and i.publish_time<ADD_MONTHS(sysdate,-1))
+			or (c.period=0 and i.publish_time<sysdate-1)
+			or (c.period=3 and i.publish_time<ADD_MONTHS(sysdate,-3))
+			or (c.period=4 and i.publish_time<ADD_MONTHS(sysdate,-12))
+			or (c.period=9 and i.publish_time<sysdate-1/24)
+			)
+		]]>
+	</select>
+</mapper>

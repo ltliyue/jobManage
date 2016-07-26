@@ -1,0 +1,458 @@
+package inspur.crawl.requirement.controller;
+
+import inspur.crawl.common.controller.BaseController;
+import inspur.crawl.common.interf.Sessions;
+import inspur.crawl.common.tools.Numbers;
+import inspur.crawl.common.tools.OutputExcel;
+import inspur.crawl.common.tools.TimeCompare;
+import inspur.crawl.demandAna.pojo.CrawlerDemand;
+import inspur.crawl.demandAna.pojo.CrawlerOpinion;
+import inspur.crawl.demandAna.pojo.DemandAnalyse;
+import inspur.crawl.demandAna.service.DemandAnalyService;
+import inspur.crawl.requirement.pojo.RequireMent;
+import inspur.crawl.requirement.pojo.RequireMentSplit;
+import inspur.crawl.requirement.service.RequireService;
+import inspur.crawl.siteManage.pojo.RealSiteCode;
+import inspur.crawl.siteManage.service.RealSiteService;
+import inspur.crawl.sysManage.pojo.Account;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.ws.rs.Produces;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.http.util.TextUtils;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+@RestController
+@RequestMapping("/requirement")
+public class RequireMentController extends BaseController {
+	@Resource
+	RequireService service;
+
+	@Resource
+	RealSiteService rsservice;
+
+	@Resource
+	DemandAnalyService demandAnalyService;
+
+	@InitBinder("requireMent")
+	public void typeBinder(WebDataBinder binder) {
+		binder.setFieldDefaultPrefix("requireMent.");
+	}
+
+	/**
+	 * 添加
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public ModelAndView add() throws Exception {
+		return request("sys/requirement/add");
+	}
+
+	/**
+	 * 编辑
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	public ModelAndView edit(@RequestParam String id) throws Exception {
+		return request("sys/requirement/edit").addObject("id", id);
+	}
+
+	/**
+	 * 根据Query条件获取需求列表
+	 * 
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/listContent", method = RequestMethod.GET)
+	public ModelAndView content(RequireMent requireMent) throws Exception {
+
+		System.out.println("----需求查询条件：" + requireMent.toString());
+
+		List<RequireMent> list = service.getResourceAll(requireMent);
+
+		System.out.println("----需求查询结果：" + list);
+		String status;
+		for (RequireMent entity : list) {
+			status = entity.getStatus();
+			if (TextUtils.isEmpty(status)) {
+				status = "待审核";
+			}
+			entity.setStatus(status);
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("accounts", list);
+		map.put("page", requireMent);
+		return request("sys/requirement/listContent", map);
+
+	}
+
+	/**
+	 * ExcelExport
+	 */
+	@RequestMapping(value = "/export", method = RequestMethod.POST)
+	@ResponseBody
+	@Produces("text/plain;charset=utf-8")
+	public int excelExport(String bm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		List<String> listheader = new ArrayList<String>();
+		listheader.add("ID");
+		listheader.add("需求性质");
+		listheader.add("需求类型");
+		listheader.add("需求名称");
+		listheader.add("需求内容");
+		listheader.add("需求提出人");
+		listheader.add("提出时间");
+		listheader.add("要求时间");
+		listheader.add("状态");
+		listheader.add("原因");
+
+		RequireMent requireMent = new RequireMent();
+
+		List<RequireMent> list;
+		if (bm.equals("运营需求管理")) {
+			list = service.getResourceAll(requireMent);
+		} else {
+			list = service.getResourceAllAdmin(requireMent);
+		}
+
+		OutputExcel oe = new OutputExcel();
+		oe.excel_requirment(bm, list, listheader, request, response);
+
+		return 0;
+	}
+
+	/**
+	 * 查询任务 id
+	 */
+	@RequestMapping(value = "/requirementq", method = RequestMethod.POST)
+	@ResponseBody
+	public RequireMent requirementq(String id) {
+		return service.getRequireMent(id);
+	}
+
+	/**
+	 * 查询站点
+	 */
+	@RequestMapping(value = "/requirementDemand", method = RequestMethod.POST)
+	@ResponseBody
+	public List<RealSiteCode> requirementDemand(String id) {
+		List<RealSiteCode> realSiteCodes = new ArrayList<RealSiteCode>();
+
+		System.out.println("----id---->" + id);
+
+		DemandAnalyse analyse = null;
+		// if (!id.contains("@")) {
+		RequireMent requireMent = service.getRequireMent(id);
+
+		System.out.println("----requireMent.getDemandId---->" + requireMent.getDemandId());
+		analyse = demandAnalyService.queryAnalyseByDemandId(requireMent.getDemandId());
+
+		System.out.println("----result---->" + analyse.toString());
+		// }else {
+		// id = id.substring(1);
+		// System.out.println("----id---->"+id);
+		// analyse = demandAnalyService.queryAnalyseByDemandId(id);
+		// }
+
+		if (analyse != null && analyse.getSiteId() != null) {
+			String[] siteId = analyse.getSiteId().split(";");
+			for (int i = 0; i < siteId.length; i++) {
+				RealSiteCode site = rsservice.querySiteBySiteId(siteId[i]);
+				realSiteCodes.add(site);
+			}
+		}
+		return realSiteCodes;
+	}
+
+	/**
+	 * 需求评估
+	 */
+	@RequestMapping(value = "/listContent_admin", method = RequestMethod.GET)
+	public ModelAndView listContent_admin(RequireMent requireMent) throws Exception {
+		System.out.println("任务列表admin：：" + requireMent.toString());
+		List<RequireMent> list = service.getResourceAllAdmin(requireMent);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("accounts", list);
+		map.put("page", requireMent);
+		return request("sys/requirement/listContent_admin", map);
+	}
+
+	/**
+	 * 查询任务
+	 * 
+	 * @param record
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/requirementsplitq", method = RequestMethod.GET)
+	public ModelAndView content_admin(RequireMentSplit record) throws Exception {
+		System.out.println("任务列表admin：：" + record.toString());
+		List<RequireMentSplit> list = service.getAllRequireMentSplit(record);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("accounts", list);
+		map.put("page", record);
+		return request("sys/requirement/listContent_admin", map);
+	}
+
+	// ---------
+
+	/**
+	 * 保存
+	 * 
+	 * @param id
+	 * @param properties
+	 * @param type
+	 * @param name
+	 * @param content
+	 * @param customer
+	 * @param propose_user
+	 * @param propose_time
+	 * @param request_time
+	 * @param out
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/saveInfo", method = RequestMethod.POST)
+	public ModelAndView saveInfo(HttpServletRequest request, @RequestParam MultipartFile[] demandFile, RequireMent query) {
+		System.out.println("---保存需求");
+
+		HttpSession session = request.getSession();
+		String username = session.getAttribute(Sessions.SESSION_USER).toString();
+		Account account = demandAnalyService.selectName(username);
+		String name = account.getName();
+		query.setProposeUser(name);// 提出人
+		query.setStatus("待审核");
+
+		Map<String, String> mapResult = new HashMap<String, String>();
+		mapResult = uploadFile(demandFile, "", request);
+		query.setEnclosure(mapResult.get("fileName"));
+
+		System.out.println("----saveInfo条件：" + query.toString());
+
+		int result = service.saveInfo(query);
+		System.out.println("----aveInfo保存结果：" + result);
+
+		RequireMent requireMent = new RequireMent();
+		List<RequireMent> list = service.getResourceAll(requireMent);
+
+		System.out.println("----需求查询结果：" + list);
+		String status;
+		for (RequireMent entity : list) {
+			status = entity.getStatus();
+			if (TextUtils.isEmpty(status)) {
+				status = "待审核";
+			}
+			entity.setStatus(status);
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("accounts", list);
+		map.put("page", requireMent);
+		return request("sys/requirement/listContent", map);
+	}
+
+	public static Map<String, String> uploadFile(MultipartFile[] demandFile, String demandId, HttpServletRequest request) {
+		int i = 0;
+		String fileName = null;
+		Map<String, String> map = new HashMap<String, String>();
+		for (MultipartFile myfile : demandFile) {
+			if (myfile.isEmpty()) {
+				i = 3;
+				System.out.println("文件未上传");
+			} else {
+				System.out.println("getRealPath1::" + request.getSession().getServletContext().getRealPath("/upload"));
+				// 如果用的是Tomcat服务器，则文件会上传到\\%TOMCAT_HOME%\\webapps\\YourWebProject\\WEB-INF\\upload\\文件夹中
+				String realPath = request.getSession().getServletContext().getRealPath("/upload");
+				if (realPath.contains(":\\")) {
+					realPath = realPath.replace("\\jobManage", "");
+				}else {
+					realPath = realPath.replace("/jobManage", "");
+				}
+				System.out.println("getRealPath2::" + realPath);
+				// String realPath = "\\bigdata" + "\\upload";
+				System.out.println(realPath);
+				String demandPath = realPath + File.separator + demandId;
+				File dir = new File(realPath);
+				if (!dir.exists() && !dir.isDirectory()) {
+					dir.mkdir();
+				}
+				File dir2 = new File(demandPath);
+				if (!dir2.exists() && !dir2.isDirectory()) {
+					dir2.mkdir();
+				}
+				// 这里不必处理IO流关闭的问题，因为FileUtils.copyInputStreamToFile()方法内部会自动把用到的IO流关掉，我是看它的源码才知道的
+				try {
+
+					if (fileName == null || fileName.isEmpty()) {
+						fileName = myfile.getOriginalFilename();
+					} else {
+						fileName = fileName + ";" + myfile.getOriginalFilename();
+					}
+					System.out.println("fileName+++++++++++++++" + new String(fileName.getBytes(), "gbk"));
+					FileUtils.copyInputStreamToFile(myfile.getInputStream(), new File(demandPath, myfile.getOriginalFilename()));
+					i = 1;
+				} catch (IOException e) {
+					i = 0;
+					e.printStackTrace();
+				}
+				map.put("fileName", fileName);
+				map.put("flag", i + "");
+				// demand.setDemandFilePath(fileName);
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * 更新需求
+	 * 
+	 * @param id
+	 * @param properties
+	 * @param type
+	 * @param name
+	 * @param content
+	 * @param customer
+	 * @param propose_user
+	 * @param propose_time
+	 * @param request_time
+	 * @param status
+	 * @param reason
+	 * @param out
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateInfo(String id, String properties, String type, String name, String content, String customer, String propose_time, String request_time, String status, String reason,
+			PrintWriter out) throws UnsupportedEncodingException {
+		RequireMent query = new RequireMent();
+		query.setId(Integer.parseInt(id));
+		query.setContent(content);
+		query.setCustomer(customer);
+		query.setName(name);
+		query.setProperties(properties);
+		query.setProposeTime(propose_time);
+		// query.setProposeUser(propose_user);
+		query.setRequestTime(request_time);
+		query.setStatus(status);
+		query.setType(type);
+		if (!TextUtils.isEmpty(reason) && reason.equals("审核通过") && type.equals("数据采集")) {
+
+			reason = "";
+			// save to 采集平台
+			RequireMent result = service.getRequireMent(id);
+
+			CrawlerDemand demand = new CrawlerDemand();
+			String demandId = Numbers.uuid();
+
+			query.setDemandId(demandId);// 本宝的DemandID
+
+			demand.setDemandId(demandId);
+			demand.setDemandName(result.getName());
+			demand.setDemandDetail(result.getContent());
+			demand.setDemandTime(TimeCompare.StringToDate1(result.getProposeTime()));// 提出时间
+
+			demand.setDemandCreater(result.getProposeUser());// 提出人
+			demand.setDemandStatus("01");//
+			demand.setDemandFilePath(result.getEnclosure());// 附件
+			int i = demandAnalyService.insertOne(demand);
+			if (i == 1) {
+				System.out.println("save Dmand sucess--->");
+				DemandAnalyse analyse = new DemandAnalyse();
+				String analyse_id = Numbers.uuid();
+				analyse.setDemandId(demandId);
+				analyse.setId(analyse_id);
+				i = demandAnalyService.insertAnalyse(analyse);
+				if (i == 1) {
+					System.out.println("save DemandAnalyse sucess--->");
+					CrawlerOpinion opinion = new CrawlerOpinion();
+					String opinionId = Numbers.uuid();
+					opinion.setDemandId(demandId);
+					opinion.setId(opinionId);
+					i = demandAnalyService.insertOpinion(opinion);
+					System.out.println("save CrawlerOpinion sucess--->");
+				}
+			}
+		}
+		query.setReason(reason);
+
+		System.out.println("----update查询条件：" + query.toString());
+
+		int result = service.updateInfo(query);
+		System.out.println("----update保存结果：" + result);
+		if (result == 1) {
+			System.out.println("----update修改成功");
+			out.print("01");
+		} else {
+			System.out.println("----信息修改失败");
+			out.print("00");
+		}
+	}
+
+	@RequestMapping(value = "/updateInfoTemp", method = RequestMethod.POST)
+	@ResponseBody
+	public ModelAndView updateInfoTemp(HttpServletRequest request, @RequestParam MultipartFile[] demandFile, RequireMent query) throws UnsupportedEncodingException {
+		// RequireMentQuery query = new RequireMentQuery();
+		// query.setId(Integer.parseInt(id));
+		// query.setContent(content);
+		// query.setCustomer(customer);
+		// query.setName(name);
+		// query.setProperties(properties);
+		// query.setProposeTime(propose_time);
+		// query.setProposeUser(propose_user);
+		// query.setRequestTime(request_time);
+		// query.setStatus(status);
+		// query.setReason(reason);
+		// query.setType(type);
+
+		Map<String, String> mapResult = new HashMap<String, String>();
+		mapResult = uploadFile(demandFile, "", request);
+		query.setEnclosure(mapResult.get("fileName"));
+
+		System.out.println("----updateInfo条件：" + query.toString());
+
+		int result = service.updateInfo(query);
+		System.out.println("----updateInfo--保存结果：" + result);
+
+		RequireMent requireMent = new RequireMent();
+		List<RequireMent> list = service.getResourceAll(requireMent);
+
+		System.out.println("--updateInfo--需求查询结果：" + list);
+		String status;
+		for (RequireMent entity : list) {
+			status = entity.getStatus();
+			if (TextUtils.isEmpty(status)) {
+				status = "待审核";
+			}
+			entity.setStatus(status);
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("accounts", list);
+		map.put("page", requireMent);
+		return request("sys/requirement/listContent", map);
+	}
+}

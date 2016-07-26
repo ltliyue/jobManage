@@ -1,0 +1,115 @@
+<%@ page language="java" import="java.util.*"  pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+String path = request.getContextPath();
+
+%>
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+    <head>
+
+        <meta charset="utf-8">
+        <title>互联网数据采集平台</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- CSS -->
+       <link href="<%=path%>/resources/css/new_version/bootstrap.min.css" rel="stylesheet">
+         <style>*{  margin:0; padding:0}</style>
+	<link href="<%=path%>/resources/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="<%=path%>/resources/css/new_version/site.css" rel="stylesheet">
+      <!-- Javascript -->
+        <script src="${webRoot }/resources/js/welcome/jquery-1.8.2.min.js" ></script>
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+<script type="text/javascript">
+$(function(){
+	$("#password").focus();
+	document.onkeydown = function(e){
+	    var ev = document.all ? window.event : e;
+	    if(ev.keyCode==13) {
+	    	login();
+	     }
+	}
+	});   
+function login(){
+	var data = $("#login_form").serialize();
+	var url = "${webRoot}/datauser/login";
+	$.post(url,data,function(data1){
+
+		if(data1=="1"){
+			myrefresh();
+		}else{
+			alert("用户名或密码错误！");
+		}
+	});
+}
+function myrefresh(){
+ var url = "${webRoot}/home/base";
+ window.location.replace(url);
+}
+</script>
+    </head>
+
+  <body style="margin:0; padding:0;overflow:-Scroll;overflow-y:hidden" >
+		<div class="container" style="width:100%">
+        <!--顶部开始-->
+			<div class="navbar"  style="margin-bottom:0">
+				<div class="navbar-inner">
+					<div class="container">
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <a class="brand" href="#"><img src="<%=path %>/resources/img/new_version/logo.png"/></a>
+						<div class="nav-collapse">
+							
+						
+							<ul class="nav pull-right">
+								<li>
+									<a href="#"><img src="<%=path %>/resources/img/new_version/wenhao.png"/></a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+            <!--顶部结束-->
+   
+            
+            <!--内容开始-->
+          
+          <div class="content_sy_bg">
+          <div class="content_sy_nr">
+          <div class="content_sy_nrbt">
+          登录
+          </div> 
+         <form action="" id="login_form">
+          <div class="content_sy_nrsr">
+          <label>用户名</label>
+          <input  type="text" required="" style="width:93%" name="userName" value="admin" id="username" placeholder="请输入用户名" >
+          <label>密码</label>
+          <input required="" name="password" id="password" type="password" value="" style="width:93%" placeholder="请输入用密码" >
+        	<input type="checkbox" value="" style="margin:0px;"><span>记住我</span>
+         
+          </div>
+          
+          <div class="content_sy_nrsranniu">
+          <button type="button" onclick="login()" class="btn btn-primary denglu_anniu">登录</button>
+            </div> 
+         </form>
+          </div>
+          </div>
+         
+            </div>
+			</div>
+           
+             <!--内容结束-->
+		</div>
+	
+
+
+	</body>
+
+</html>

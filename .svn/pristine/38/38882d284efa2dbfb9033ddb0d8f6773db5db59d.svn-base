@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.requirement.mapper.RequireMentSplitMapper">
+	<resultMap id="BaseResultMap"
+		type="inspur.crawl.requirement.pojo.RequireMentSplit">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CONTENT" property="content" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="PLAN_TIME" property="planTime" jdbcType="VARCHAR" />
+		<result column="ISALIVE" property="isalive" jdbcType="VARCHAR" />
+		<result column="JOB_FREQUENCY" property="jobFrequency"
+			jdbcType="VARCHAR" />
+		<result column="JOB_DEGREE" property="jobDegree" jdbcType="VARCHAR" />
+		<result column="JOB_CONTENT" property="jobContent" jdbcType="VARCHAR" />
+		<result column="JOB_RANGE" property="jobRange" jdbcType="VARCHAR" />
+		<result column="ISMACH" property="ismach" jdbcType="VARCHAR" />
+		<result column="ISCOLLECTION" property="iscollection" jdbcType="VARCHAR" />
+		<result column="ISREPORT" property="isreport" jdbcType="VARCHAR" />
+		<result column="RID" property="rid" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<select id="getAllRequireMentSplit" resultMap="BaseResultMap" parameterType="inspur.crawl.requirement.pojo.RequireMentSplitQuery">
+		select * from requirement_split t where 1=1
+		<if test="id != null" >
+        and t.id = '${id}' 
+      	</if>
+      	<if test="rid != null" >
+        and t.rid = '${rid}' 
+      	</if>
+
+	</select>
+
+	<insert id="insertRequireMentSplit"
+		parameterType="inspur.crawl.requirement.pojo.RequireMentSplitQuery">
+		insert into REQUIREMENT_SPLIT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="content != null">
+				CONTENT,
+			</if>
+			<if test="type != null">
+				TYPE,
+			</if>
+			<if test="planTime != null">
+				PLAN_TIME,
+			</if>
+			<if test="isalive != null">
+				ISALIVE,
+			</if>
+			<if test="jobFrequency != null">
+				JOB_FREQUENCY,
+			</if>
+			<if test="jobDegree != null">
+				JOB_DEGREE,
+			</if>
+			<if test="jobContent != null">
+				JOB_CONTENT,
+			</if>
+			<if test="jobRange != null">
+				JOB_RANGE,
+			</if>
+			<if test="ismach != null">
+				ISMACH,
+			</if>
+			<if test="iscollection != null">
+				ISCOLLECTION,
+			</if>
+			<if test="isreport != null">
+				ISREPORT,
+			</if>
+			<if test="rid != null">
+				RID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="planTime != null">
+				#{planTime,jdbcType=VARCHAR},
+			</if>
+			<if test="isalive != null">
+				#{isalive,jdbcType=VARCHAR},
+			</if>
+			<if test="jobFrequency != null">
+				#{jobFrequency,jdbcType=VARCHAR},
+			</if>
+			<if test="jobDegree != null">
+				#{jobDegree,jdbcType=VARCHAR},
+			</if>
+			<if test="jobContent != null">
+				#{jobContent,jdbcType=VARCHAR},
+			</if>
+			<if test="jobRange != null">
+				#{jobRange,jdbcType=VARCHAR},
+			</if>
+			<if test="ismach != null">
+				#{ismach,jdbcType=VARCHAR},
+			</if>
+			<if test="iscollection != null">
+				#{iscollection,jdbcType=VARCHAR},
+			</if>
+			<if test="isreport != null">
+				#{isreport,jdbcType=VARCHAR},
+			</if>
+			<if test="rid != null">
+				#{rid,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+</mapper>

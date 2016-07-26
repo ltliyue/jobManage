@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+body { background:url(../images/body_bg_page.jpg) no-repeat center -120px #f2f8fd; }
+
+
+/* navbar
+--------------------------------------------------------------------*/
+.navbar { background:none; border:none;}
+.navbar-brand img { height:40px;}
+
+
+.navbar-right { margin-top:10px;}
+.dropdown-toggle { color:#000!important; border-radius:3px; padding:7px !important; margin-left:10px;}
+.dropdown-toggle:hover, .dropdown-toggle:focus, .dropdown-toggle:active
+{ background:#608092 !important; color:#fff !important;}
+.dropdown-menu { border-radius:3px !important;}
+
+#footer { text-align:center; padding:0; border:none; margin-top:50px; height:40px; line-height:40px; background:#608092;}
+footer p { margin:0; padding:0; color:#fff;}
+
+table.table tbody tr td { vertical-align:middle; border:none; padding:7px 3px;}
+table.table tbody tr td .progress-bar a { color:#fff; text-decoration:none;}
+table.tableLeft tbody tr td { padding:12px 8px;}
+.table_1 { height:300px; overflow:auto;}
+
+
+/* dbTable > 数据表格
+--------------------------------------------------------------------*/
+.buttonBox button { float:left; margin-right:5px;}
+
+#progress { position:relative; width:300px; float:left;}
+.pbar .ui-progressbar-value {display:block !important}
+.pbar {overflow:hidden;}
+.percent { position:absolute; left:135px; top:1px; text-align:right; font-size:12px;}
+#shopTable tr.thead td { background:url(../images/shopTable_bg.png) repeat-x; border-color:#d3edc5;}
+#shopTable tr td { border-color:#d3edc5;}

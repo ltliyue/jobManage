@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.requirementCode.mapper.RCodeMapper">
+	<resultMap id="BaseResultMap" type="inspur.crawl.requirementCode.pojo.RCode">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- list -->
+	<select id="listPage" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		select * from JOBPROPERTIES t where 1=1
+		<if test="id != null">
+			and t.id = '${id}'
+		</if>
+		<if test="name != null">
+			and t.name = '${name}'
+		</if>
+		order by id
+	</select>
+
+	<!-- list by id -->
+	<select id="getResourceById" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		select * from JOBPROPERTIES t where 1=1
+		<if test="id!=null and id!=''">
+			and id = '${id}'
+		</if>
+	</select>
+
+	<!-- insert -->
+	<insert id="saveInfo" parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		insert into JOBPROPERTIES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateInfo" parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		update JOBPROPERTIES
+		<set>
+			<if test="id != null">
+				ID = #{id,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		JOBPROPERTIES
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	<!--================================================ -->
+	<!-- list -->
+	<select id="listPageType" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		select * from JOBTYPE t where 1=1
+		<if test="id != null">
+			and t.id = '${id}'
+		</if>
+		<if test="name != null">
+			and t.name = '${name}'
+		</if>
+		order by id
+	</select>
+
+	<!-- list by id -->
+	<select id="getResourceByIdType" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		select * from JOBTYPE t where 1=1
+		<if test="id!=null and id!=''">
+			and id = '${id}'
+		</if>
+	</select>
+
+	<!-- insert -->
+	<insert id="saveInfoType" parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		insert into JOBTYPE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateInfoType" parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		update JOBTYPE
+		<set>
+			<if test="id != null">
+				ID = #{id,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<delete id="deleteByPrimaryKeyType" parameterType="java.lang.Integer">
+		delete from
+		JOBTYPE
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	
+	<!--================================================ -->
+	<!-- list -->
+	<select id="listPageStatus" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		select * from JOBSTATUS t where 1=1
+		<if test="id != null">
+			and t.id = '${id}'
+		</if>
+		<if test="name != null">
+			and t.name = '${name}'
+		</if>
+		order by id
+	</select>
+
+	<!-- list by id -->
+	<select id="getResourceByIdStatus" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		select * from JOBSTATUS t where 1=1
+		<if test="id!=null and id!=''">
+			and id = '${id}'
+		</if>
+	</select>
+
+	<!-- insert -->
+	<insert id="saveInfoStatus" parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		insert into JOBSTATUS
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateInfoStatus" parameterType="inspur.crawl.requirementCode.pojo.RCode">
+		update JOBSTATUS
+		<set>
+			<if test="id != null">
+				ID = #{id,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<delete id="deleteByPrimaryKeyStatus" parameterType="java.lang.Integer">
+		delete from
+		JOBSTATUS
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.monitor.mapper.MonitorDataMapper">
+	<resultMap id="BaseResultMap" type="inspur.crawl.monitor.pojo.MonitorSourceData">
+		<id column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
+		<id column="DATA_TIME" property="dataTime" jdbcType="TIMESTAMP" />
+		<result column="DATA_ALL" property="dataAll" jdbcType="DECIMAL" />
+		<result column="DATA_NEW" property="dataNew" jdbcType="DECIMAL" />
+		<result column="DATA_INCR" property="dataIncr" jdbcType="DECIMAL" />
+		<result column="DATA_INCR_PER" property="dataIncrPer" jdbcType="DECIMAL" />
+	</resultMap>
+	<select id="selectLatestData" resultMap="BaseResultMap">
+		select *
+		 from DATA_MONITOR_GENERATE t1
+		where exists (select 1
+				from (select data_type, max(data_time) data_time
+						from DATA_MONITOR_GENERATE
+					   group by data_type) t2
+				 where t1.data_type = t2.data_type
+				 and t1.data_time = t2.data_time)
+	</select>
+	<select id="selectDemandData" resultType="map">
+		select demand_status,count(1) as num from crawler_demand
+		group by demand_status
+	</select>
+	<select id="selectSiteData" resultType="map">
+		select 'total' as st,count(1) as num from code_site_real s
+		union
+		select 'deliver' as st,count(1) as num 
+		from code_site_real s1
+		where exists(select 1 from crawler_demand d1, crawler_demand_analyse a1 
+							where d1.demand_id=a1.demand_id
+							and instr(a1.site_id,s1.id)>0 and d1.demand_status='7')
+		union
+		select 'demand' as st,count(1) as num 
+		from code_site_real s2
+		where not exists(select 1 from crawler_demand d2, crawler_demand_analyse a2 
+							where d2.demand_id=a2.demand_id
+							and instr(a2.site_id,s2.id)>0 and d2.demand_status in('03','05','06','07'))
+
+	</select>
+</mapper>

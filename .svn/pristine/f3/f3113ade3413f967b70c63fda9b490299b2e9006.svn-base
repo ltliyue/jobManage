@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.demandAna.data_mapper.CrawlerDemandMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.demandAna.pojo.CrawlerDemand" >
+    <id column="DEMAND_ID" property="demandId" jdbcType="VARCHAR" />
+    <result column="DEMAND_NAME" property="demandName" jdbcType="VARCHAR" />
+    <result column="DEMAND_DETAIL" property="demandDetail" jdbcType="VARCHAR" />
+    <result column="DEMAND_STATUS" property="demandStatus" jdbcType="VARCHAR" />
+    <result column="DEMAND_TIME" property="demandTime" jdbcType="TIMESTAMP" />
+    <result column="DEMAND_CREATER" property="demandCreater" jdbcType="VARCHAR" />
+    <result column="DEMAND_FILE_PATH" property="demandFilePath" jdbcType="VARCHAR" />
+    <result column="DATA_FEEDBACK" property="dataFeedback" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    DEMAND_ID, DEMAND_NAME, DEMAND_DETAIL, DEMAND_STATUS, DEMAND_TIME, DEMAND_CREATER, 
+    DEMAND_FILE_PATH, DATA_FEEDBACK
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from CRAWLER_DEMAND
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from CRAWLER_DEMAND
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from CRAWLER_DEMAND
+    where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CRAWLER_DEMAND
+    where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandCriteria" >
+    delete from CRAWLER_DEMAND
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemand" >
+    insert into CRAWLER_DEMAND (DEMAND_ID, DEMAND_NAME, DEMAND_DETAIL, 
+      DEMAND_STATUS, DEMAND_TIME, DEMAND_CREATER, 
+      DEMAND_FILE_PATH, DATA_FEEDBACK)
+    values (#{demandId,jdbcType=VARCHAR}, #{demandName,jdbcType=VARCHAR}, #{demandDetail,jdbcType=VARCHAR}, 
+      #{demandStatus,jdbcType=VARCHAR}, #{demandTime,jdbcType=TIMESTAMP}, #{demandCreater,jdbcType=VARCHAR}, 
+      #{demandFilePath,jdbcType=VARCHAR}, #{dataFeedback,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemand" >
+    insert into CRAWLER_DEMAND
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="demandId != null" >
+        DEMAND_ID,
+      </if>
+      <if test="demandName != null" >
+        DEMAND_NAME,
+      </if>
+      <if test="demandDetail != null" >
+        DEMAND_DETAIL,
+      </if>
+      <if test="demandStatus != null" >
+        DEMAND_STATUS,
+      </if>
+      <if test="demandTime != null" >
+        DEMAND_TIME,
+      </if>
+      <if test="demandCreater != null" >
+        DEMAND_CREATER,
+      </if>
+      <if test="demandFilePath != null" >
+        DEMAND_FILE_PATH,
+      </if>
+      <if test="dataFeedback != null" >
+        DATA_FEEDBACK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="demandId != null" >
+        #{demandId,jdbcType=VARCHAR},
+      </if>
+      <if test="demandName != null" >
+        #{demandName,jdbcType=VARCHAR},
+      </if>
+      <if test="demandDetail != null" >
+        #{demandDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="demandStatus != null" >
+        #{demandStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="demandTime != null" >
+        #{demandTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="demandCreater != null" >
+        #{demandCreater,jdbcType=VARCHAR},
+      </if>
+      <if test="demandFilePath != null" >
+        #{demandFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFeedback != null" >
+        #{dataFeedback,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemandCriteria" resultType="java.lang.Integer" >
+    select count(*) from CRAWLER_DEMAND
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CRAWLER_DEMAND
+    <set >
+      <if test="record.demandId != null" >
+        DEMAND_ID = #{record.demandId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.demandName != null" >
+        DEMAND_NAME = #{record.demandName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.demandDetail != null" >
+        DEMAND_DETAIL = #{record.demandDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.demandStatus != null" >
+        DEMAND_STATUS = #{record.demandStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.demandTime != null" >
+        DEMAND_TIME = #{record.demandTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.demandCreater != null" >
+        DEMAND_CREATER = #{record.demandCreater,jdbcType=VARCHAR},
+      </if>
+      <if test="record.demandFilePath != null" >
+        DEMAND_FILE_PATH = #{record.demandFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataFeedback != null" >
+        DATA_FEEDBACK = #{record.dataFeedback,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CRAWLER_DEMAND
+    set DEMAND_ID = #{record.demandId,jdbcType=VARCHAR},
+      DEMAND_NAME = #{record.demandName,jdbcType=VARCHAR},
+      DEMAND_DETAIL = #{record.demandDetail,jdbcType=VARCHAR},
+      DEMAND_STATUS = #{record.demandStatus,jdbcType=VARCHAR},
+      DEMAND_TIME = #{record.demandTime,jdbcType=TIMESTAMP},
+      DEMAND_CREATER = #{record.demandCreater,jdbcType=VARCHAR},
+      DEMAND_FILE_PATH = #{record.demandFilePath,jdbcType=VARCHAR},
+      DATA_FEEDBACK = #{record.dataFeedback,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateDemandStatus" parameterType="java.lang.String">
+  	update CRAWLER_DEMAND
+  	SET DEMAND_STATUS = #{demandStatus,jdbcType=VARCHAR}
+  	WHERE DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemand" >
+    update CRAWLER_DEMAND
+    <set >
+      <if test="demandName != null" >
+        DEMAND_NAME = #{demandName,jdbcType=VARCHAR},
+      </if>
+      <if test="demandDetail != null" >
+        DEMAND_DETAIL = #{demandDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="demandStatus != null" >
+        DEMAND_STATUS = #{demandStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="demandTime != null" >
+        DEMAND_TIME = #{demandTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="demandCreater != null" >
+        DEMAND_CREATER = #{demandCreater,jdbcType=VARCHAR},
+      </if>
+      <if test="demandFilePath != null" >
+        DEMAND_FILE_PATH = #{demandFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFeedback != null" >
+        DATA_FEEDBACK = #{dataFeedback,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="inspur.crawl.demandAna.pojo.CrawlerDemand" >
+    update CRAWLER_DEMAND
+    set DEMAND_NAME = #{demandName,jdbcType=VARCHAR},
+      DEMAND_DETAIL = #{demandDetail,jdbcType=VARCHAR},
+      DEMAND_STATUS = #{demandStatus,jdbcType=VARCHAR},
+      DEMAND_TIME = #{demandTime,jdbcType=TIMESTAMP},
+      DEMAND_CREATER = #{demandCreater,jdbcType=VARCHAR},
+      DEMAND_FILE_PATH = #{demandFilePath,jdbcType=VARCHAR},
+      DATA_FEEDBACK = #{dataFeedback,jdbcType=VARCHAR}
+    where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+  </update>
+</mapper>

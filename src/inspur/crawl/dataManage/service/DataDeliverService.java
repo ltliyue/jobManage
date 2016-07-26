@@ -1,0 +1,83 @@
+package inspur.crawl.dataManage.service;
+
+import inspur.crawl.common.interceptor.Page;
+import inspur.crawl.dataManage.mapper.CjSysNotesMapper;
+import inspur.crawl.dataManage.data_mapper.CrawlerDataDeliverMapper;
+import inspur.crawl.dataManage.pojo.CjSysNotes;
+import inspur.crawl.dataManage.pojo.CjSysNotesCriteria;
+import inspur.crawl.dataManage.pojo.CrawlerDataDeliver;
+import inspur.crawl.demandAna.data_mapper.DemandAnalyseMapper;
+import inspur.crawl.demandAna.pojo.DemandAnalyse;
+import inspur.crawl.demandAna.pojo.DemandAnalyseCriteria;
+import inspur.crawl.taskManage.controller.TaskConstant;
+import inspur.crawl.taskManage.pojo.CrawlerTask;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.inspur.avro.model.java.DataDeliver;
+import com.inspur.kafka.main.KafkaProducerClient;
+
+@Service
+public class DataDeliverService {
+	@Resource
+	DemandAnalyseMapper dam ;
+	@Resource
+	CjSysNotesMapper cjsysNotesMapper;
+	@Resource
+	CrawlerDataDeliverMapper cddm;
+	
+	public List<DemandAnalyse> queryDemand() {
+		DemandAnalyseCriteria dac = new DemandAnalyseCriteria();
+		List<DemandAnalyse> list = dam.selectByExample(dac);
+		return list;
+	}
+	
+	public List<CrawlerTask> queryTasks(String demandId){
+		List<CrawlerTask> list = dam.selectTasksByDemand(demandId);
+		return list;
+	}
+	
+	public List<CjSysNotes> queryTable(String ruleId, String cs){
+//		CjSysNotesCriteria cc = new CjSysNotesCriteria();
+//		cc.createCriteria().andRuleIdEqualTo(ruleId);
+		List<CjSysNotes> list = cjsysNotesMapper.selectTableByRule(ruleId, cs);
+		return list;
+	}
+
+	public int saveData(CrawlerDataDeliver cdd) {
+		return cddm.insert(cdd);
+	}
+	
+	/**
+	 * 发送任务至kafka
+	 * 
+	 * @param request
+	 */
+	public void sendDataDeliver(DataDeliver deliver) {
+		int partition = KafkaProducerClient.caculatePartition(
+				"dataMonitor", deliver.getDemandId().hashCode(),
+				0L);
+		// kafka分区发送任务ID，提醒任务配置变更
+		Object obj = KafkaProducerClient.sendToKafka("dataMonitor",
+				partition,
+				deliver.getDemandId() + "|" + deliver.getPublishId() + "|"
+						+ deliver.getDeliverStage(), deliver);
+		System.out.println(obj.toString());
+	}
+
+	/**
+	 * 查询所有成功的交付需求和版本
+	 * 检索用
+	 * @param deliver
+	 * @param page
+	 * @return
+	 */
+	public List<CrawlerDataDeliver> queryDataVersions(CrawlerDataDeliver deliver, Page page) {
+		return cddm.listPageForDelvierVersion(deliver, page);
+	}
+
+}

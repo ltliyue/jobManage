@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.dataManage.data_mapper.DataSourceMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.dataManage.pojo.DataSource" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SORUCE_NAME" property="soruceName" jdbcType="VARCHAR" />
+    <result column="DATA_ADDRESS" property="dataAddress" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="PASS_NAME" property="passName" jdbcType="VARCHAR" />
+    <result column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, SORUCE_NAME, DATA_ADDRESS, USER_NAME, PASS_NAME, DATA_TYPE, CREATE_TIME
+  </sql>
+  <select id="selectUserTables" resultType="java.lang.String"  parameterType="inspur.crawl.dataManage.pojo.DataSourceCriteria" >
+  	select table_name  from user_tables where table_name like #{bm}   order by last_analyzed desc
+  </select>
+   <select id="selectColumn" resultType="java.lang.String"  parameterType="inspur.crawl.dataManage.pojo.DataSourceCriteria" >
+  	select column_name  from USER_TAB_COLUMNS where table_name = #{bm} 
+  </select>
+  <select id="selectUserTableNum" resultType="java.lang.String"  parameterType="inspur.crawl.dataManage.pojo.DataSourceCriteria" >
+  	select count(1)  from  ${bm} ${where}
+  </select>
+   <select id="selectListTable" resultType="java.util.Map" parameterType="java.lang.String" >
+  	 select * from (select temp_table.*,ROWNUM rn from (select *  from ${bm} ${where} 
+  	 ) temp_table where #{endnum}>= rownum) where rn > #{startnum} 
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.dataManage.pojo.DataSourceCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from DATA_SOURCE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from DATA_SOURCE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  <delete id="disColumn" parameterType="inspur.crawl.dataManage.pojo.DataSourceCriteria" >
+    delete from  ${bm} t where t.rowid > (select min(rowid) from ${bm} ${where})
+  </delete>
+  <delete id="deleteByExample" parameterType="inspur.crawl.dataManage.pojo.DataSourceCriteria" >
+    delete from DATA_SOURCE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.dataManage.pojo.DataSource" >
+    insert into DATA_SOURCE (ID, SORUCE_NAME, DATA_ADDRESS, 
+      USER_NAME, PASS_NAME, DATA_TYPE, 
+      CREATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{soruceName,jdbcType=VARCHAR}, #{dataAddress,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{passName,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="zdysql" parameterType="String">
+      ${sql}
+    </update>
+   <update id="createTable" parameterType="String">
+      create table  ${table}
+    </update>
+     <update id="plupdateTable" parameterType="String">
+      update ${bm} set ${set} ${where}
+    </update>
+     <update id="pldelTable" parameterType="String">
+      delete from ${bm}  ${where}
+    </update>
+  <insert id="insertSelective" parameterType="inspur.crawl.dataManage.pojo.DataSource" >
+    insert into DATA_SOURCE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="soruceName != null" >
+        SORUCE_NAME,
+      </if>
+      <if test="dataAddress != null" >
+        DATA_ADDRESS,
+      </if>
+      <if test="userName != null" >
+        USER_NAME,
+      </if>
+      <if test="passName != null" >
+        PASS_NAME,
+      </if>
+      <if test="dataType != null" >
+        DATA_TYPE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="soruceName != null" >
+        #{soruceName,jdbcType=VARCHAR},
+      </if>
+      <if test="dataAddress != null" >
+        #{dataAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="passName != null" >
+        #{passName,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null" >
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.dataManage.pojo.DataSourceCriteria" resultType="java.lang.Integer" >
+    select count(*) from DATA_SOURCE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update DATA_SOURCE
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.soruceName != null" >
+        SORUCE_NAME = #{record.soruceName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataAddress != null" >
+        DATA_ADDRESS = #{record.dataAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userName != null" >
+        USER_NAME = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.passName != null" >
+        PASS_NAME = #{record.passName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataType != null" >
+        DATA_TYPE = #{record.dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update DATA_SOURCE
+    set ID = #{record.id,jdbcType=VARCHAR},
+      SORUCE_NAME = #{record.soruceName,jdbcType=VARCHAR},
+      DATA_ADDRESS = #{record.dataAddress,jdbcType=VARCHAR},
+      USER_NAME = #{record.userName,jdbcType=VARCHAR},
+      PASS_NAME = #{record.passName,jdbcType=VARCHAR},
+      DATA_TYPE = #{record.dataType,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

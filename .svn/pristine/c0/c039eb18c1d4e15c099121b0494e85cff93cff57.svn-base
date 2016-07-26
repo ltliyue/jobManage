@@ -1,0 +1,32 @@
+package inspur.crawl.demandAna.mapper;
+
+import inspur.crawl.demandAna.pojo.CrawlerDemand;
+import inspur.crawl.demandAna.pojo.CrawlerDemandCriteria;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+public interface CrawlerDemandMapper {
+    int countByExample(CrawlerDemandCriteria example);
+
+    int deleteByExample(CrawlerDemandCriteria example);
+
+    int deleteByPrimaryKey(String demandId);
+
+    int insert(CrawlerDemand record);
+
+    int insertSelective(CrawlerDemand record);
+
+    List<CrawlerDemand> selectByExample(CrawlerDemandCriteria example);
+
+    CrawlerDemand selectByPrimaryKey(String demandId);
+
+    int updateByExampleSelective(@Param("record") CrawlerDemand record, @Param("example") CrawlerDemandCriteria example);
+
+    int updateByExample(@Param("record") CrawlerDemand record, @Param("example") CrawlerDemandCriteria example);
+
+    int updateByPrimaryKeySelective(CrawlerDemand record);
+
+    int updateByPrimaryKey(CrawlerDemand record);
+    
+    int updateDemandStatus(@Param("demandStatus") String demandStatus,@Param("demandId") String demandId);
+}

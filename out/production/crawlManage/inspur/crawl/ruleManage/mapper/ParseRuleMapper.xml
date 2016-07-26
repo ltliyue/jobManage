@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.ruleManage.mapper.ParseRuleMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.ruleManage.pojo.ParseRule" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+    <result column="URL_PATTERN" property="urlPattern" jdbcType="VARCHAR" />
+    <result column="EXTRACT_TYPE" property="extractType" jdbcType="VARCHAR" />
+    <result column="REGEX" property="regex" jdbcType="VARCHAR" />
+    <result column="REGEX_GROUP_ID" property="regexGroupId" jdbcType="VARCHAR" />
+    <result column="XPATH" property="xpath" jdbcType="VARCHAR" />
+    <result column="TIME" property="time" jdbcType="TIMESTAMP" />
+    <result column="ENABLED" property="enabled" jdbcType="DECIMAL" />
+    <result column="URL_WITH_LOOP" property="urlWithLoop" jdbcType="DECIMAL" />
+    <result column="LOOP_START" property="loopStart" jdbcType="VARCHAR" />
+    <result column="LOOP_END" property="loopEnd" jdbcType="VARCHAR" />
+    <result column="LOOP_VAR" property="loopVar" jdbcType="VARCHAR" />
+    <result column="LOOP_STEP" property="loopStep" jdbcType="DECIMAL" />
+    <result column="LOOP_FORMAT" property="loopFormat" jdbcType="VARCHAR" />
+    <result column="URL_TYPE" property="urlType" jdbcType="DECIMAL" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="LOOP_SAMPLE" property="loopSample" jdbcType="VARCHAR" />
+    <result column="TEST_URL" property="testUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, NAME, TASK_ID, URL_PATTERN, EXTRACT_TYPE, REGEX, REGEX_GROUP_ID, XPATH, TIME, 
+    ENABLED, URL_WITH_LOOP, LOOP_START, LOOP_END, LOOP_VAR, LOOP_STEP, LOOP_FORMAT, URL_TYPE, 
+    CREATOR, LOOP_SAMPLE, TEST_URL
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.ruleManage.pojo.ParseRuleCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from PARSE_RULE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from PARSE_RULE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  
+  <select id="listPageBySearch" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from PARSE_RULE t
+		<where>
+			<if test="record.name != null and record.name!=''">
+				(
+				NAME like CONCAT(CONCAT('%', #{record.name}),'%')
+				)
+			</if>
+			<if test="record.taskId != null and record.taskId!=''">
+				and task_id = #{record.taskId}
+			</if>
+			<if test="record.extractType != null and record.extractType!=''">
+				and extract_type = #{record.extractType}
+			</if>
+		</where>
+		order by time desc
+	</select>
+	<select id="listPage" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.ruleManage.pojo.ParseRuleCriteria">
+		select * from PARSE_RULE order by NAME desc
+	</select>
+
+	<select id="listPageByTaskId" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.ruleManage.pojo.ParseRuleCriteria">
+		select * from PARSE_RULE where TASK_ID=#{taskId} order
+		by NAME desc
+	</select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PARSE_RULE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PARSE_RULE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="inspur.crawl.ruleManage.pojo.ParseRuleCriteria" >
+    delete from PARSE_RULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.ruleManage.pojo.ParseRule" >
+    insert into PARSE_RULE (ID, NAME, TASK_ID, 
+      URL_PATTERN, EXTRACT_TYPE, REGEX, 
+      REGEX_GROUP_ID, XPATH, TIME, 
+      ENABLED, URL_WITH_LOOP, LOOP_START, 
+      LOOP_END, LOOP_VAR, LOOP_STEP, 
+      LOOP_FORMAT, URL_TYPE, CREATOR, 
+      LOOP_SAMPLE, TEST_URL)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
+      #{urlPattern,jdbcType=VARCHAR}, #{extractType,jdbcType=VARCHAR}, #{regex,jdbcType=VARCHAR}, 
+      #{regexGroupId,jdbcType=VARCHAR}, #{xpath,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, 
+      #{enabled,jdbcType=DECIMAL}, #{urlWithLoop,jdbcType=DECIMAL}, #{loopStart,jdbcType=VARCHAR}, 
+      #{loopEnd,jdbcType=VARCHAR}, #{loopVar,jdbcType=VARCHAR}, #{loopStep,jdbcType=DECIMAL}, 
+      #{loopFormat,jdbcType=VARCHAR}, #{urlType,jdbcType=DECIMAL}, #{creator,jdbcType=VARCHAR}, 
+      #{loopSample,jdbcType=VARCHAR}, #{testUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.ruleManage.pojo.ParseRule" >
+    insert into PARSE_RULE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="urlPattern != null" >
+        URL_PATTERN,
+      </if>
+      <if test="extractType != null" >
+        EXTRACT_TYPE,
+      </if>
+      <if test="regex != null" >
+        REGEX,
+      </if>
+      <if test="regexGroupId != null" >
+        REGEX_GROUP_ID,
+      </if>
+      <if test="xpath != null" >
+        XPATH,
+      </if>
+      <if test="time != null" >
+        TIME,
+      </if>
+      <if test="enabled != null" >
+        ENABLED,
+      </if>
+      <if test="urlWithLoop != null" >
+        URL_WITH_LOOP,
+      </if>
+      <if test="loopStart != null" >
+        LOOP_START,
+      </if>
+      <if test="loopEnd != null" >
+        LOOP_END,
+      </if>
+      <if test="loopVar != null" >
+        LOOP_VAR,
+      </if>
+      <if test="loopStep != null" >
+        LOOP_STEP,
+      </if>
+      <if test="loopFormat != null" >
+        LOOP_FORMAT,
+      </if>
+      <if test="urlType != null" >
+        URL_TYPE,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="loopSample != null" >
+        LOOP_SAMPLE,
+      </if>
+      <if test="testUrl != null" >
+        TEST_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="urlPattern != null" >
+        #{urlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="extractType != null" >
+        #{extractType,jdbcType=VARCHAR},
+      </if>
+      <if test="regex != null" >
+        #{regex,jdbcType=VARCHAR},
+      </if>
+      <if test="regexGroupId != null" >
+        #{regexGroupId,jdbcType=VARCHAR},
+      </if>
+      <if test="xpath != null" >
+        #{xpath,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enabled != null" >
+        #{enabled,jdbcType=DECIMAL},
+      </if>
+      <if test="urlWithLoop != null" >
+        #{urlWithLoop,jdbcType=DECIMAL},
+      </if>
+      <if test="loopStart != null" >
+        #{loopStart,jdbcType=VARCHAR},
+      </if>
+      <if test="loopEnd != null" >
+        #{loopEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="loopVar != null" >
+        #{loopVar,jdbcType=VARCHAR},
+      </if>
+      <if test="loopStep != null" >
+        #{loopStep,jdbcType=DECIMAL},
+      </if>
+      <if test="loopFormat != null" >
+        #{loopFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="urlType != null" >
+        #{urlType,jdbcType=DECIMAL},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="loopSample != null" >
+        #{loopSample,jdbcType=VARCHAR},
+      </if>
+      <if test="testUrl != null" >
+        #{testUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.ruleManage.pojo.ParseRuleCriteria" resultType="java.lang.Integer" >
+    select count(*) from PARSE_RULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PARSE_RULE
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskId != null" >
+        TASK_ID = #{record.taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urlPattern != null" >
+        URL_PATTERN = #{record.urlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="record.extractType != null" >
+        EXTRACT_TYPE = #{record.extractType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regex != null" >
+        REGEX = #{record.regex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regexGroupId != null" >
+        REGEX_GROUP_ID = #{record.regexGroupId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xpath != null" >
+        XPATH = #{record.xpath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.time != null" >
+        TIME = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.enabled != null" >
+        ENABLED = #{record.enabled,jdbcType=DECIMAL},
+      </if>
+      <if test="record.urlWithLoop != null" >
+        URL_WITH_LOOP = #{record.urlWithLoop,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loopStart != null" >
+        LOOP_START = #{record.loopStart,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopEnd != null" >
+        LOOP_END = #{record.loopEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopVar != null" >
+        LOOP_VAR = #{record.loopVar,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopStep != null" >
+        LOOP_STEP = #{record.loopStep,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loopFormat != null" >
+        LOOP_FORMAT = #{record.loopFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urlType != null" >
+        URL_TYPE = #{record.urlType,jdbcType=DECIMAL},
+      </if>
+      <if test="record.creator != null" >
+        CREATOR = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopSample != null" >
+        LOOP_SAMPLE = #{record.loopSample,jdbcType=VARCHAR},
+      </if>
+      <if test="record.testUrl != null" >
+        TEST_URL = #{record.testUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PARSE_RULE
+    set ID = #{record.id,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      TASK_ID = #{record.taskId,jdbcType=VARCHAR},
+      URL_PATTERN = #{record.urlPattern,jdbcType=VARCHAR},
+      EXTRACT_TYPE = #{record.extractType,jdbcType=VARCHAR},
+      REGEX = #{record.regex,jdbcType=VARCHAR},
+      REGEX_GROUP_ID = #{record.regexGroupId,jdbcType=VARCHAR},
+      XPATH = #{record.xpath,jdbcType=VARCHAR},
+      TIME = #{record.time,jdbcType=TIMESTAMP},
+      ENABLED = #{record.enabled,jdbcType=DECIMAL},
+      URL_WITH_LOOP = #{record.urlWithLoop,jdbcType=DECIMAL},
+      LOOP_START = #{record.loopStart,jdbcType=VARCHAR},
+      LOOP_END = #{record.loopEnd,jdbcType=VARCHAR},
+      LOOP_VAR = #{record.loopVar,jdbcType=VARCHAR},
+      LOOP_STEP = #{record.loopStep,jdbcType=DECIMAL},
+      LOOP_FORMAT = #{record.loopFormat,jdbcType=VARCHAR},
+      URL_TYPE = #{record.urlType,jdbcType=DECIMAL},
+      CREATOR = #{record.creator,jdbcType=VARCHAR},
+      LOOP_SAMPLE = #{record.loopSample,jdbcType=VARCHAR},
+      TEST_URL = #{record.testUrl,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.ruleManage.pojo.ParseRule" >
+    update PARSE_RULE
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="urlPattern != null" >
+        URL_PATTERN = #{urlPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="extractType != null" >
+        EXTRACT_TYPE = #{extractType,jdbcType=VARCHAR},
+      </if>
+      <if test="regex != null" >
+        REGEX = #{regex,jdbcType=VARCHAR},
+      </if>
+      <if test="regexGroupId != null" >
+        REGEX_GROUP_ID = #{regexGroupId,jdbcType=VARCHAR},
+      </if>
+      <if test="xpath != null" >
+        XPATH = #{xpath,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        TIME = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enabled != null" >
+        ENABLED = #{enabled,jdbcType=DECIMAL},
+      </if>
+      <if test="urlWithLoop != null" >
+        URL_WITH_LOOP = #{urlWithLoop,jdbcType=DECIMAL},
+      </if>
+      <if test="loopStart != null" >
+        LOOP_START = #{loopStart,jdbcType=VARCHAR},
+      </if>
+      <if test="loopEnd != null" >
+        LOOP_END = #{loopEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="loopVar != null" >
+        LOOP_VAR = #{loopVar,jdbcType=VARCHAR},
+      </if>
+      <if test="loopStep != null" >
+        LOOP_STEP = #{loopStep,jdbcType=DECIMAL},
+      </if>
+      <if test="loopFormat != null" >
+        LOOP_FORMAT = #{loopFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="urlType != null" >
+        URL_TYPE = #{urlType,jdbcType=DECIMAL},
+      </if>
+      <if test="creator != null" >
+        CREATOR = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="loopSample != null" >
+        LOOP_SAMPLE = #{loopSample,jdbcType=VARCHAR},
+      </if>
+      <if test="testUrl != null" >
+        TEST_URL = #{testUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="inspur.crawl.ruleManage.pojo.ParseRule" >
+    update PARSE_RULE
+    set NAME = #{name,jdbcType=VARCHAR},
+      TASK_ID = #{taskId,jdbcType=VARCHAR},
+      URL_PATTERN = #{urlPattern,jdbcType=VARCHAR},
+      EXTRACT_TYPE = #{extractType,jdbcType=VARCHAR},
+      REGEX = #{regex,jdbcType=VARCHAR},
+      REGEX_GROUP_ID = #{regexGroupId,jdbcType=VARCHAR},
+      XPATH = #{xpath,jdbcType=VARCHAR},
+      TIME = #{time,jdbcType=TIMESTAMP},
+      ENABLED = #{enabled,jdbcType=DECIMAL},
+      URL_WITH_LOOP = #{urlWithLoop,jdbcType=DECIMAL},
+      LOOP_START = #{loopStart,jdbcType=VARCHAR},
+      LOOP_END = #{loopEnd,jdbcType=VARCHAR},
+      LOOP_VAR = #{loopVar,jdbcType=VARCHAR},
+      LOOP_STEP = #{loopStep,jdbcType=DECIMAL},
+      LOOP_FORMAT = #{loopFormat,jdbcType=VARCHAR},
+      URL_TYPE = #{urlType,jdbcType=DECIMAL},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      LOOP_SAMPLE = #{loopSample,jdbcType=VARCHAR},
+      TEST_URL = #{testUrl,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

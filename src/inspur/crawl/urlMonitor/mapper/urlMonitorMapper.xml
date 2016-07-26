@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 为这个mapper指定一个唯一的namespace，namespace的值习惯上设置成包名+sql映射文件名，这样就能够保证namespace的值是唯一的 -->
+<!-- 例如namespace="me.gacl.mapping.userMapper"就是me.gacl.mapping(包名)+userMapper(userMapper.xml文件去除后缀) -->
+<!--  -->
+<mapper namespace="inspur.crawl.urlMonitor.mapper.urlMonitorMapper">
+    <resultMap id="TaskNameId" type="inspur.crawl.urlMonitor.pojo.TaskNameId">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="TASK_ID" property="task_id" jdbcType="VARCHAR" />
+		<result column="TASK_NAME" property="task_name" jdbcType="VARCHAR" />
+		<result column="PUBLISH_TIME" property="publish_time" jdbcType="VARCHAR" />
+		<result column="FINISH_TIME" property="finish_time" jdbcType="VARCHAR" />
+	</resultMap>
+    <select id="getNameId" resultMap="TaskNameId" resultType="java.util.HashMap" >
+        select task_id,task_name from crawler_task
+    </select>
+    <select id="getTime" resultMap="TaskNameId" resultType="java.util.HashMap" >
+        select * from crawler_task_instance where instance_id = #{instance_id,jdbcType=VARCHAR} and stage = '0'
+    </select>
+</mapper>

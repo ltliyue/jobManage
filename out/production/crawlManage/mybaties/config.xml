@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings> 
+    <setting name="lazyLoadingEnabled" value="true"/> 
+    <setting name="aggressiveLazyLoading" value="false"/> 
+    </settings> 
+	<!-- 设置分页的方式 -->
+	<plugins>
+		<plugin interceptor="inspur.crawl.common.interceptor.PageHelper">
+			<property name="dialect" value="oracle"/>
+			<property name="pageSqlId" value=".*listPage.*"/>
+		</plugin>
+	</plugins>
+	
+</configuration>

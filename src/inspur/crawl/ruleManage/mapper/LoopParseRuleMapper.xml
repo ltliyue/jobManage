@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.ruleManage.mapper.LoopParseRuleMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.ruleManage.pojo.LoopParseRule" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PARSE_RULE_ID" property="parseRuleId" jdbcType="VARCHAR" />
+    <result column="LOOP_SAMPLE" property="loopSample" jdbcType="VARCHAR" />
+    <result column="LOOP_VARS" property="loopVars" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, PARSE_RULE_ID, LOOP_SAMPLE, LOOP_VARS
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.ruleManage.pojo.LoopParseRuleCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from LOOP_PARSE_RULE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from LOOP_PARSE_RULE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LOOP_PARSE_RULE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LOOP_PARSE_RULE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="inspur.crawl.ruleManage.pojo.LoopParseRuleCriteria" >
+    delete from LOOP_PARSE_RULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.ruleManage.pojo.LoopParseRule" >
+    insert into LOOP_PARSE_RULE (ID, PARSE_RULE_ID, LOOP_SAMPLE, 
+      LOOP_VARS)
+    values (#{id,jdbcType=VARCHAR}, #{parseRuleId,jdbcType=VARCHAR}, #{loopSample,jdbcType=VARCHAR}, 
+      #{loopVars,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.ruleManage.pojo.LoopParseRule" >
+    insert into LOOP_PARSE_RULE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="parseRuleId != null" >
+        PARSE_RULE_ID,
+      </if>
+      <if test="loopSample != null" >
+        LOOP_SAMPLE,
+      </if>
+      <if test="loopVars != null" >
+        LOOP_VARS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="parseRuleId != null" >
+        #{parseRuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="loopSample != null" >
+        #{loopSample,jdbcType=VARCHAR},
+      </if>
+      <if test="loopVars != null" >
+        #{loopVars,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.ruleManage.pojo.LoopParseRuleCriteria" resultType="java.lang.Integer" >
+    select count(*) from LOOP_PARSE_RULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update LOOP_PARSE_RULE
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parseRuleId != null" >
+        PARSE_RULE_ID = #{record.parseRuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopSample != null" >
+        LOOP_SAMPLE = #{record.loopSample,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopVars != null" >
+        LOOP_VARS = #{record.loopVars,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update LOOP_PARSE_RULE
+    set ID = #{record.id,jdbcType=VARCHAR},
+      PARSE_RULE_ID = #{record.parseRuleId,jdbcType=VARCHAR},
+      LOOP_SAMPLE = #{record.loopSample,jdbcType=VARCHAR},
+      LOOP_VARS = #{record.loopVars,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.ruleManage.pojo.LoopParseRule" >
+    update LOOP_PARSE_RULE
+    <set >
+      <if test="parseRuleId != null" >
+        PARSE_RULE_ID = #{parseRuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="loopSample != null" >
+        LOOP_SAMPLE = #{loopSample,jdbcType=VARCHAR},
+      </if>
+      <if test="loopVars != null" >
+        LOOP_VARS = #{loopVars,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="inspur.crawl.ruleManage.pojo.LoopParseRule" >
+    update LOOP_PARSE_RULE
+    set PARSE_RULE_ID = #{parseRuleId,jdbcType=VARCHAR},
+      LOOP_SAMPLE = #{loopSample,jdbcType=VARCHAR},
+      LOOP_VARS = #{loopVars,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

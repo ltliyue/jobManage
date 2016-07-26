@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.ruleManage.mapper.LoopVarRuleMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.ruleManage.pojo.LoopVarRule" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="LOOP_PARSE_RULE_ID" property="loopParseRuleId" jdbcType="VARCHAR" />
+    <result column="LOOP_START" property="loopStart" jdbcType="VARCHAR" />
+    <result column="LOOP_VAR_TYPE" property="loopVarType" jdbcType="DECIMAL" />
+    <result column="LOOP_END" property="loopEnd" jdbcType="VARCHAR" />
+    <result column="LOOP_STEP" property="loopStep" jdbcType="DECIMAL" />
+    <result column="LOOP_FORMAT" property="loopFormat" jdbcType="VARCHAR" />
+    <result column="LOOP_STR_LIST" property="loopStrList" jdbcType="CLOB" />
+    <!-- javaType = "java.lang.String"  typeHandler ="org.apache.ibatis.type.ClobTypeHandler"  -->
+    <result column="LOOP_STR_ENCODE" property="loopStrEncode" jdbcType="VARCHAR" />
+    <result column="LOOP_VAR_NAME" property="loopVarName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  
+  <sql id="Base_Column_List" >
+    ID, LOOP_PARSE_RULE_ID, LOOP_START, LOOP_VAR_TYPE, LOOP_END, LOOP_STEP, LOOP_FORMAT, 
+     LOOP_STR_LIST, LOOP_STR_ENCODE,LOOP_VAR_NAME
+  </sql>
+   
+  <sql id="Abbr_Column_List" >
+    ID, LOOP_PARSE_RULE_ID, LOOP_START, LOOP_VAR_TYPE, LOOP_END, LOOP_STEP, LOOP_FORMAT, 
+     CONCAT(SUBSTR(LOOP_STR_LIST,0,500),SUBSTR(LOOP_STR_LIST,-50)) AS LOOP_STR_LIST, LOOP_STR_ENCODE,LOOP_VAR_NAME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.ruleManage.pojo.LoopVarRuleCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from LOOP_VAR_RULE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from LOOP_VAR_RULE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  
+  <select id="selectAbbrByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.ruleManage.pojo.LoopVarRuleCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Abbr_Column_List" />
+      from LOOP_VAR_RULE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Abbr_Column_List" />
+      from LOOP_VAR_RULE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LOOP_VAR_RULE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+   <select id="selectAbbrByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Abbr_Column_List" />
+    from LOOP_VAR_RULE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LOOP_VAR_RULE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="inspur.crawl.ruleManage.pojo.LoopVarRuleCriteria" >
+    delete from LOOP_VAR_RULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.ruleManage.pojo.LoopVarRule" >
+    insert into LOOP_VAR_RULE (ID, LOOP_PARSE_RULE_ID, LOOP_START, 
+      LOOP_VAR_TYPE, LOOP_END, LOOP_STEP, 
+      LOOP_FORMAT, LOOP_STR_LIST, LOOP_STR_ENCODE,LOOP_VAR_NAME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{loopParseRuleId,jdbcType=VARCHAR}, #{loopStart,jdbcType=VARCHAR}, 
+      #{loopVarType,jdbcType=DECIMAL}, #{loopEnd,jdbcType=VARCHAR}, #{loopStep,jdbcType=DECIMAL}, 
+      #{loopFormat,jdbcType=VARCHAR}, #{loopStrList,jdbcType=CLOB}, #{loopStrEncode,jdbcType=VARCHAR},
+      #{loopVarName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.ruleManage.pojo.LoopVarRule" >
+    insert into LOOP_VAR_RULE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="loopParseRuleId != null" >
+        LOOP_PARSE_RULE_ID,
+      </if>
+      <if test="loopStart != null" >
+        LOOP_START,
+      </if>
+      <if test="loopVarType != null" >
+        LOOP_VAR_TYPE,
+      </if>
+      <if test="loopEnd != null" >
+        LOOP_END,
+      </if>
+      <if test="loopStep != null" >
+        LOOP_STEP,
+      </if>
+      <if test="loopFormat != null" >
+        LOOP_FORMAT,
+      </if>
+      <if test="loopStrList != null" >
+        LOOP_STR_LIST,
+      </if>
+      <if test="loopStrEncode != null" >
+        LOOP_STR_ENCODE,
+      </if>
+      <if test="loopStrEncode != null" >
+        LOOP_VAR_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="loopParseRuleId != null" >
+        #{loopParseRuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="loopStart != null" >
+        #{loopStart,jdbcType=VARCHAR},
+      </if>
+      <if test="loopVarType != null" >
+        #{loopVarType,jdbcType=DECIMAL},
+      </if>
+      <if test="loopEnd != null" >
+        #{loopEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="loopStep != null" >
+        #{loopStep,jdbcType=DECIMAL},
+      </if>
+      <if test="loopFormat != null" >
+        #{loopFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="loopStrList != null" >
+        #{loopStrList,jdbcType=CLOB},
+      </if>
+      <if test="loopStrEncode != null" >
+        #{loopStrEncode,jdbcType=VARCHAR},
+      </if>
+      <if test="loopVarName != null" >
+        LOOP_VAR_NAME,
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.ruleManage.pojo.LoopVarRuleCriteria" resultType="java.lang.Integer" >
+    select count(*) from LOOP_VAR_RULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update LOOP_VAR_RULE
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopParseRuleId != null" >
+        LOOP_PARSE_RULE_ID = #{record.loopParseRuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopStart != null" >
+        LOOP_START = #{record.loopStart,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopVarType != null" >
+        LOOP_VAR_TYPE = #{record.loopVarType,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loopEnd != null" >
+        LOOP_END = #{record.loopEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopStep != null" >
+        LOOP_STEP = #{record.loopStep,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loopFormat != null" >
+        LOOP_FORMAT = #{record.loopFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopStrList != null" >
+        LOOP_STR_LIST = #{record.loopStrList,jdbcType=CLOB},
+      </if>
+      <if test="record.loopStrEncode != null" >
+        LOOP_STR_ENCODE = #{record.loopStrEncode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loopVarName != null" >
+        LOOP_VAR_NAME = #{record.loopVarName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update LOOP_VAR_RULE
+    set ID = #{record.id,jdbcType=VARCHAR},
+      LOOP_PARSE_RULE_ID = #{record.loopParseRuleId,jdbcType=VARCHAR},
+      LOOP_START = #{record.loopStart,jdbcType=VARCHAR},
+      LOOP_VAR_TYPE = #{record.loopVarType,jdbcType=DECIMAL},
+      LOOP_END = #{record.loopEnd,jdbcType=VARCHAR},
+      LOOP_STEP = #{record.loopStep,jdbcType=DECIMAL},
+      LOOP_FORMAT = #{record.loopFormat,jdbcType=VARCHAR},
+      LOOP_STR_ENCODE = #{record.loopStrEncode,jdbcType=VARCHAR},
+      LOOP_VAR_NAME = #{record.loopVarName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.ruleManage.pojo.LoopVarRule" >
+    update LOOP_VAR_RULE
+    <set >
+      <if test="loopParseRuleId != null" >
+        LOOP_PARSE_RULE_ID = #{loopParseRuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="loopStart != null" >
+        LOOP_START = #{loopStart,jdbcType=VARCHAR},
+      </if>
+      <if test="loopVarType != null" >
+        LOOP_VAR_TYPE = #{loopVarType,jdbcType=DECIMAL},
+      </if>
+      <if test="loopEnd != null" >
+        LOOP_END = #{loopEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="loopStep != null" >
+        LOOP_STEP = #{loopStep,jdbcType=DECIMAL},
+      </if>
+      <if test="loopFormat != null" >
+        LOOP_FORMAT = #{loopFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="loopStrEncode != null" >
+        LOOP_STR_ENCODE = #{loopStrEncode,jdbcType=VARCHAR},
+      </if>
+      <if test="loopVarName != null" >
+        LOOP_VAR_NAME = #{loopVarName,jdbcType=VARCHAR},
+      </if>
+      <if test="loopStrList != null" >
+        LOOP_STR_LIST = #{loopStrList,jdbcType=CLOB},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="inspur.crawl.ruleManage.pojo.LoopVarRule" >
+    update LOOP_VAR_RULE
+    set LOOP_PARSE_RULE_ID = #{loopParseRuleId,jdbcType=VARCHAR},
+      LOOP_START = #{loopStart,jdbcType=VARCHAR},
+      LOOP_VAR_TYPE = #{loopVarType,jdbcType=DECIMAL},
+      LOOP_END = #{loopEnd,jdbcType=VARCHAR},
+      LOOP_STEP = #{loopStep,jdbcType=DECIMAL},
+      LOOP_FORMAT = #{loopFormat,jdbcType=VARCHAR},
+      LOOP_STR_ENCODE = #{loopStrEncode,jdbcType=VARCHAR},
+      LOOP_VAR_NAME = #{loopVarName,jdbcType=VARCHAR},
+      LOOP_STR_LIST = #{loopStrList,jdbcType=CLOB}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="inspur.crawl.ruleManage.pojo.LoopVarRule" >
+    update LOOP_VAR_RULE
+    set LOOP_PARSE_RULE_ID = #{loopParseRuleId,jdbcType=VARCHAR},
+      LOOP_START = #{loopStart,jdbcType=VARCHAR},
+      LOOP_VAR_TYPE = #{loopVarType,jdbcType=DECIMAL},
+      LOOP_END = #{loopEnd,jdbcType=VARCHAR},
+      LOOP_STEP = #{loopStep,jdbcType=DECIMAL},
+      LOOP_FORMAT = #{loopFormat,jdbcType=VARCHAR},
+      LOOP_STR_ENCODE = #{loopStrEncode,jdbcType=VARCHAR},
+      LOOP_VAR_NAME = #{loopVarName,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

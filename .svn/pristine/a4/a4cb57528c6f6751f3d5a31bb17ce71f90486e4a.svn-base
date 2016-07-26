@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.requirement.mapper.RequireMentMapper">
+	<resultMap id="BaseResultMap" type="inspur.crawl.requirement.pojo.RequireMent">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="PROPERTIES" property="properties" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CONTENT" property="content" jdbcType="VARCHAR" />
+		<result column="CUSTOMER" property="customer" jdbcType="VARCHAR" />
+		<result column="PROPOSE_USER" property="proposeUser" jdbcType="VARCHAR" />
+		<result column="PROPOSE_TIME" property="proposeTime" jdbcType="VARCHAR" />
+		<result column="REQUEST_TIME" property="requestTime" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="REASON" property="reason" jdbcType="VARCHAR" />
+		<result column="ENCLOSURE" property="enclosure" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<!-- list -->
+	<select id="listPage" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirement.pojo.RequireMentQuery">
+		select * from requirement t where 1=1
+		<if test="id != null">
+			and t.id = '${id}'
+		</if>
+		<if test="properties != null and properties!=''">
+			and t.properties = '${properties}'
+		</if>
+		<if test="type != null and type!=''">
+			and t.type = '${type}'
+		</if>
+		<if test="name != null and name!=''">
+			and t.name = '${name}'
+		</if>
+		<if test="customer != null and customer!=''">
+			and t.customer = '${customer}'
+		</if>
+		<if test="proposeUser != null and proposeUser!=''">
+			and t.PROPOSE_USER = '${proposeUser}'
+		</if>
+		<if test="proposeTime != null and proposeTime!=''">
+			and t.PROPOSE_TIME = '${proposeTime}'
+		</if>
+		<if test="requestTime != null and requestTime!=''">
+			and t.REQUEST_TIME = '${requestTime}'
+		</if>
+		<if test="status != null and status!=''">
+			and t.status = '${status}'
+		</if>
+		<if test="reason != null and reason!=''">
+			and t.reason = '${reason}'
+		</if>
+		<if test="enclosure != null and enclosure!=''">
+			and t.enclosure = '${enclosure}'
+		</if>
+	</select>
+
+	<!-- list by id -->
+	<select id="getResourceById" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.requirement.pojo.RequireMentQuery">
+		select * from requirement t where 1=1
+		<if test="id!=null and id!=''">
+			and id = '${id}'
+		</if>
+	</select>
+
+	<!-- insert -->
+	<insert id="saveInfo" parameterType="inspur.crawl.requirement.pojo.RequireMent">
+		insert into REQUIREMENT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="properties != null">
+				PROPERTIES,
+			</if>
+			<if test="type != null">
+				TYPE,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="content != null">
+				CONTENT,
+			</if>
+			<if test="customer != null">
+				CUSTOMER,
+			</if>
+			<if test="proposeUser != null">
+				PROPOSE_USER,
+			</if>
+			<if test="proposeTime != null">
+				PROPOSE_TIME,
+			</if>
+			<if test="requestTime != null">
+				REQUEST_TIME,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="reason != null">
+				REASON,
+			</if>
+			<if test="enclosure != null">
+				ENCLOSURE,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="properties != null">
+				#{properties,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="customer != null">
+				#{customer,jdbcType=VARCHAR},
+			</if>
+			<if test="proposeUser != null">
+				#{proposeUser,jdbcType=VARCHAR},
+			</if>
+			<if test="proposeTime != null">
+				#{proposeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="requestTime != null">
+				#{requestTime,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="reason != null">
+				#{reason,jdbcType=VARCHAR},
+			</if>
+			<if test="enclosure != null">
+				#{enclosure,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateInfo" parameterType="inspur.crawl.requirement.pojo.RequireMent">
+		update REQUIREMENT
+		<set>
+			<if test="properties != null">
+				PROPERTIES = #{properties,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				TYPE = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				CONTENT = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="customer != null">
+				CUSTOMER = #{customer,jdbcType=VARCHAR},
+			</if>
+			<if test="proposeUser != null">
+				PROPOSE_USER = #{proposeUser,jdbcType=VARCHAR},
+			</if>
+			<if test="proposeTime != null">
+				PROPOSE_TIME = #{proposeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="requestTime != null">
+				REQUEST_TIME = #{requestTime,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="reason != null">
+				REASON = #{reason,jdbcType=VARCHAR},
+			</if>
+			<if test="enclosure != null and enclosure!=''">
+				ENCLOSURE = #{enclosure,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+</mapper>

@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.taskManage.mapper.TaskInstanceMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.taskManage.pojo.TaskInstance" >
+    <id column="INSTANCE_ID" property="instanceId" jdbcType="VARCHAR" />
+    <id column="STAGE" property="stage" jdbcType="DECIMAL" />
+    <result column="TASK_ID" property="taskId" jdbcType="DECIMAL" />
+    <result column="PUBLISHER_ID" property="publisherId" jdbcType="VARCHAR" />
+    <result column="PUBLISH_TIME" property="publishTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="FINISH_TIME" property="finishTime" jdbcType="TIMESTAMP" />
+    <result column="TOTAL_AMOUNT" property="totalAmount" jdbcType="DECIMAL" />
+    <result column="HANDLED_AMOUNT" property="handledAmount" jdbcType="DECIMAL" />
+    <result column="HANDLED_PERCENT" property="handledPercent" jdbcType="DECIMAL" />
+	<result column="TASK_NAME" property="taskName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    INSTANCE_ID, STAGE, TASK_ID, PUBLISHER_ID, PUBLISH_TIME, STATUS, FINISH_TIME, TOTAL_AMOUNT, 
+    HANDLED_AMOUNT, HANDLED_PERCENT
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.taskManage.pojo.TaskInstanceCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from CRAWLER_TASK_INSTANCE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from CRAWLER_TASK_INSTANCE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+   <select id="selectIns" resultMap="BaseResultMap" parameterType="inspur.crawl.taskManage.pojo.TaskInstanceCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from CRAWLER_TASK_INSTANCE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from CRAWLER_TASK_INSTANCE
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="inspur.crawl.taskManage.pojo.TaskInstanceKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from CRAWLER_TASK_INSTANCE
+    where INSTANCE_ID = #{instanceId,jdbcType=VARCHAR}
+      and STAGE = #{stage,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="inspur.crawl.taskManage.pojo.TaskInstanceKey" >
+    delete from CRAWLER_TASK_INSTANCE
+    where INSTANCE_ID = #{instanceId,jdbcType=VARCHAR}
+      and STAGE = #{stage,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="inspur.crawl.taskManage.pojo.TaskInstanceCriteria" >
+    delete from CRAWLER_TASK_INSTANCE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.taskManage.pojo.TaskInstance" >
+    insert into CRAWLER_TASK_INSTANCE (INSTANCE_ID, STAGE, TASK_ID, 
+      PUBLISHER_ID, PUBLISH_TIME, STATUS, 
+      FINISH_TIME, TOTAL_AMOUNT, HANDLED_AMOUNT, 
+      HANDLED_PERCENT)
+    values (#{instanceId,jdbcType=VARCHAR}, #{stage,jdbcType=DECIMAL}, #{taskId,jdbcType=DECIMAL}, 
+      #{publisherId,jdbcType=VARCHAR}, #{publishTime,jdbcType=TIMESTAMP}, #{status,jdbcType=DECIMAL}, 
+      #{finishTime,jdbcType=TIMESTAMP}, #{totalAmount,jdbcType=DECIMAL}, #{handledAmount,jdbcType=DECIMAL}, 
+      #{handledPercent,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.taskManage.pojo.TaskInstance" >
+    insert into CRAWLER_TASK_INSTANCE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="instanceId != null" >
+        INSTANCE_ID,
+      </if>
+      <if test="stage != null" >
+        STAGE,
+      </if>
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="publisherId != null" >
+        PUBLISHER_ID,
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="finishTime != null" >
+        FINISH_TIME,
+      </if>
+      <if test="totalAmount != null" >
+        TOTAL_AMOUNT,
+      </if>
+      <if test="handledAmount != null" >
+        HANDLED_AMOUNT,
+      </if>
+      <if test="handledPercent != null" >
+        HANDLED_PERCENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="instanceId != null" >
+        #{instanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="stage != null" >
+        #{stage,jdbcType=DECIMAL},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=DECIMAL},
+      </if>
+      <if test="publisherId != null" >
+        #{publisherId,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="finishTime != null" >
+        #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalAmount != null" >
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="handledAmount != null" >
+        #{handledAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="handledPercent != null" >
+        #{handledPercent,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.taskManage.pojo.TaskInstanceCriteria" resultType="java.lang.Integer" >
+    select count(*) from CRAWLER_TASK_INSTANCE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CRAWLER_TASK_INSTANCE
+    <set >
+      <if test="record.instanceId != null" >
+        INSTANCE_ID = #{record.instanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stage != null" >
+        STAGE = #{record.stage,jdbcType=DECIMAL},
+      </if>
+      <if test="record.taskId != null" >
+        TASK_ID = #{record.taskId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.publisherId != null" >
+        PUBLISHER_ID = #{record.publisherId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publishTime != null" >
+        PUBLISH_TIME = #{record.publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=DECIMAL},
+      </if>
+      <if test="record.finishTime != null" >
+        FINISH_TIME = #{record.finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.totalAmount != null" >
+        TOTAL_AMOUNT = #{record.totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.handledAmount != null" >
+        HANDLED_AMOUNT = #{record.handledAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.handledPercent != null" >
+        HANDLED_PERCENT = #{record.handledPercent,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CRAWLER_TASK_INSTANCE
+    set INSTANCE_ID = #{record.instanceId,jdbcType=VARCHAR},
+      STAGE = #{record.stage,jdbcType=DECIMAL},
+      TASK_ID = #{record.taskId,jdbcType=DECIMAL},
+      PUBLISHER_ID = #{record.publisherId,jdbcType=VARCHAR},
+      PUBLISH_TIME = #{record.publishTime,jdbcType=TIMESTAMP},
+      STATUS = #{record.status,jdbcType=DECIMAL},
+      FINISH_TIME = #{record.finishTime,jdbcType=TIMESTAMP},
+      TOTAL_AMOUNT = #{record.totalAmount,jdbcType=DECIMAL},
+      HANDLED_AMOUNT = #{record.handledAmount,jdbcType=DECIMAL},
+      HANDLED_PERCENT = #{record.handledPercent,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.taskManage.pojo.TaskInstance" >
+    update CRAWLER_TASK_INSTANCE
+    <set >
+      <if test="taskId != null" >
+        TASK_ID = #{taskId,jdbcType=DECIMAL},
+      </if>
+      <if test="publisherId != null" >
+        PUBLISHER_ID = #{publisherId,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME = #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="finishTime != null" >
+        FINISH_TIME = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalAmount != null" >
+        TOTAL_AMOUNT = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="handledAmount != null" >
+        HANDLED_AMOUNT = #{handledAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="handledPercent != null" >
+        HANDLED_PERCENT = #{handledPercent,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where INSTANCE_ID = #{instanceId,jdbcType=VARCHAR}
+      and STAGE = #{stage,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="inspur.crawl.taskManage.pojo.TaskInstance" >
+    update CRAWLER_TASK_INSTANCE
+    set TASK_ID = #{taskId,jdbcType=DECIMAL},
+      PUBLISHER_ID = #{publisherId,jdbcType=VARCHAR},
+      PUBLISH_TIME = #{publishTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=DECIMAL},
+      FINISH_TIME = #{finishTime,jdbcType=TIMESTAMP},
+      TOTAL_AMOUNT = #{totalAmount,jdbcType=DECIMAL},
+      HANDLED_AMOUNT = #{handledAmount,jdbcType=DECIMAL},
+      HANDLED_PERCENT = #{handledPercent,jdbcType=DECIMAL}
+    where INSTANCE_ID = #{instanceId,jdbcType=VARCHAR}
+      and STAGE = #{stage,jdbcType=DECIMAL}
+  </update>
+  <select id="listPageInstance" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    from CRAWLER_TASK_INSTANCE
+    where TASK_ID= #{instance.taskId}
+    order by publish_time desc
+  </select>
+  <select id="listPageForSelect" resultMap="BaseResultMap" parameterType="map" >
+    select 
+     i.INSTANCE_ID, i.TASK_ID, i.PUBLISHER_ID, i.PUBLISH_TIME, i.STATUS, i.FINISH_TIME
+    ,t.TASK_NAME
+    from CRAWLER_TASK_INSTANCE i,CRAWLER_TASK t
+    <where>
+    	t.TASK_ID=i.TASK_ID and i.STAGE=0
+			<if test="task.taskName != null and task.taskName!=''">
+			 and ( 
+					t.TASK_NAME like CONCAT(CONCAT('%', #{task.taskName}),'%') 
+					or t.URL like CONCAT(CONCAT('%', #{task.taskName}),'%')
+					or to_char(t.TASK_ID)=#{task.taskName}
+				)
+			</if>
+			<if test="task.status != null">
+				and i.STATUS = #{task.status}
+			</if>
+			<if test="task.period != null">
+				and exists(select 1 from CRAWLER_TASK_CONFIG c where i.TASK_ID=c.TASK_ID and c.PERIOD=#{task.period} )
+			</if>
+		</where>
+    order by publish_time desc
+  </select>
+  <select id="countByStatus" parameterType="inspur.crawl.taskManage.pojo.CrawlerTask"
+		resultType="map">
+		select status,count(1) as count from CRAWLER_TASK_INSTANCE i
+		<where>
+			i.STAGE=0
+			<if test="task.taskName != null and task.taskName!=''">
+				and exists(select 1 from CRAWLER_TASK t where t.TASK_ID=i.TASK_ID
+					and (
+						TASK_NAME like CONCAT(CONCAT('%', #{task.taskName}),'%') 
+						or URL like CONCAT(CONCAT('%', #{task.taskName}),'%')
+					)
+				)
+			</if>
+			<if test="task.period != null">
+				and exists(select 1 from CRAWLER_TASK_CONFIG c where i.TASK_ID=c.TASK_ID and c.PERIOD=#{task.period} )
+			</if>
+		</where>
+		group by status
+	</select>
+	<select id="countByPeriod" parameterType="inspur.crawl.taskManage.pojo.CrawlerTask"
+		resultType="map">
+		select c.period,count(1) as count from CRAWLER_TASK_INSTANCE i,crawler_task_config c
+		where 
+		c.period is not null
+		and i.TASK_ID=c.TASK_ID
+		and i.STAGE=0
+		and exists(select 1 from crawler_task t where t.task_id=c.task_id
+			<if test="task.taskName != null and task.taskName!=''">
+				and ( 
+					t.TASK_NAME like CONCAT(CONCAT('%', #{task.taskName}),'%') 
+					or t.URL like CONCAT(CONCAT('%', #{task.taskName}),'%')
+				)
+			</if>
+			<if test="task.status != null">
+				and i.STATUS = #{task.status}
+			</if>
+		)
+		group by period
+	</select>
+</mapper>

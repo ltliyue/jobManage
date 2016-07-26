@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.taskManage.mapper.CrawlerTaskConfigMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.taskManage.pojo.CrawlerTaskConfig" >
+    <id column="TASK_ID" property="taskId" jdbcType="DECIMAL" />
+    <result column="MAX_DEPTH" property="maxDepth" jdbcType="DECIMAL" />
+    <result column="FAILURE_COUNT" property="failureCount" jdbcType="DECIMAL" />
+    <result column="TRANSMIT_MODE" property="transmitMode" jdbcType="VARCHAR" />
+    <result column="INTERVAL" property="interval" jdbcType="DECIMAL" />
+    <result column="PERIOD" property="period" jdbcType="DECIMAL" />
+    <result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="MODIFIER" property="modifier" jdbcType="VARCHAR" />
+    <result column="CRAWLER_TYPE" property="crawlerType" jdbcType="DECIMAL" />
+    <result column="EXECUTE_JS" property="executeJs" jdbcType="DECIMAL" />
+    <result column="CRAWLER_SCOPE" property="crawlerScope" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TASK_ID, MAX_DEPTH, FAILURE_COUNT, TRANSMIT_MODE, INTERVAL, PERIOD, MODIFY_TIME, 
+    MODIFIER, CRAWLER_TYPE, EXECUTE_JS, CRAWLER_SCOPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from CRAWLER_TASK_CONFIG
+    where TASK_ID = #{taskId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from CRAWLER_TASK_CONFIG
+    where TASK_ID = #{taskId,jdbcType=DECIMAL}
+  </delete>
+   <insert id="insert" parameterType="inspur.crawl.taskManage.pojo.CrawlerTaskConfig" >
+    insert into CRAWLER_TASK_CONFIG (TASK_ID, MAX_DEPTH, FAILURE_COUNT, 
+      TRANSMIT_MODE, INTERVAL, PERIOD, 
+      MODIFY_TIME, MODIFIER, CRAWLER_TYPE, 
+      EXECUTE_JS, CRAWLER_SCOPE)
+    values (#{taskId,jdbcType=DECIMAL}, #{maxDepth,jdbcType=DECIMAL}, #{failureCount,jdbcType=DECIMAL}, 
+      #{transmitMode,jdbcType=VARCHAR}, #{interval,jdbcType=DECIMAL}, #{period,jdbcType=DECIMAL}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{crawlerType,jdbcType=DECIMAL}, 
+      #{executeJs,jdbcType=DECIMAL}, #{crawlerScope,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.taskManage.pojo.CrawlerTaskConfig" >
+    insert into CRAWLER_TASK_CONFIG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskId != null" >
+        TASK_ID,
+      </if>
+      <if test="maxDepth != null" >
+        MAX_DEPTH,
+      </if>
+      <if test="failureCount != null" >
+        FAILURE_COUNT,
+      </if>
+      <if test="transmitMode != null" >
+        TRANSMIT_MODE,
+      </if>
+      <if test="interval != null" >
+        INTERVAL,
+      </if>
+      <if test="period != null" >
+        PERIOD,
+      </if>
+      <if test="modifyTime != null" >
+        MODIFY_TIME,
+      </if>
+      <if test="modifier != null" >
+        MODIFIER,
+      </if>
+      <if test="crawlerType != null" >
+        CRAWLER_TYPE,
+      </if>
+      <if test="executeJs != null" >
+        EXECUTE_JS,
+      </if>
+      <if test="crawlerScope != null" >
+        CRAWLER_SCOPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskId != null" >
+        #{taskId,jdbcType=DECIMAL},
+      </if>
+      <if test="maxDepth != null" >
+        #{maxDepth,jdbcType=DECIMAL},
+      </if>
+      <if test="failureCount != null" >
+        #{failureCount,jdbcType=DECIMAL},
+      </if>
+      <if test="transmitMode != null" >
+        #{transmitMode,jdbcType=VARCHAR},
+      </if>
+      <if test="interval != null" >
+        #{interval,jdbcType=DECIMAL},
+      </if>
+      <if test="period != null" >
+        #{period,jdbcType=DECIMAL},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null" >
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="crawlerType != null" >
+        #{crawlerType,jdbcType=DECIMAL},
+      </if>
+      <if test="executeJs != null" >
+        #{executeJs,jdbcType=DECIMAL},
+      </if>
+      <if test="crawlerScope != null" >
+        #{crawlerScope,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.taskManage.pojo.CrawlerTaskConfig" >
+    update CRAWLER_TASK_CONFIG
+    <set >
+      <if test="maxDepth != null" >
+        MAX_DEPTH = #{maxDepth,jdbcType=DECIMAL},
+      </if>
+      <if test="failureCount != null" >
+        FAILURE_COUNT = #{failureCount,jdbcType=DECIMAL},
+      </if>
+      <if test="transmitMode != null" >
+        TRANSMIT_MODE = #{transmitMode,jdbcType=VARCHAR},
+      </if>
+      <if test="interval != null" >
+        INTERVAL = #{interval,jdbcType=DECIMAL},
+      </if>
+      <if test="period != null" >
+        PERIOD = #{period,jdbcType=DECIMAL},
+      </if>
+      <if test="modifyTime != null" >
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null" >
+        MODIFIER = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="crawlerType != null" >
+        CRAWLER_TYPE = #{crawlerType,jdbcType=DECIMAL},
+      </if>
+      <if test="executeJs != null" >
+        EXECUTE_JS = #{executeJs,jdbcType=DECIMAL},
+      </if>
+      <if test="crawlerScope != null" >
+        CRAWLER_SCOPE = #{crawlerScope,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where TASK_ID = #{taskId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="inspur.crawl.taskManage.pojo.CrawlerTaskConfig" >
+    update CRAWLER_TASK_CONFIG
+    set MAX_DEPTH = #{maxDepth,jdbcType=DECIMAL},
+      FAILURE_COUNT = #{failureCount,jdbcType=DECIMAL},
+      TRANSMIT_MODE = #{transmitMode,jdbcType=VARCHAR},
+      INTERVAL = #{interval,jdbcType=DECIMAL},
+      PERIOD = #{period,jdbcType=DECIMAL},
+      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      MODIFIER = #{modifier,jdbcType=VARCHAR},
+      CRAWLER_TYPE = #{crawlerType,jdbcType=DECIMAL},
+      EXECUTE_JS = #{executeJs,jdbcType=DECIMAL},
+      CRAWLER_SCOPE = #{crawlerScope,jdbcType=DECIMAL}
+    where TASK_ID = #{taskId,jdbcType=DECIMAL}
+  </update>
+</mapper>

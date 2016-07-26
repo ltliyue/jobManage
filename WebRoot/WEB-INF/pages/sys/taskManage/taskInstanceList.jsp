@@ -1,0 +1,127 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	String path = request.getContextPath();
+%>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>互联网数据采集平台</title>
+
+<!-- Bootstrap core CSS -->
+  <link href="<%=path%>/resources/css/new_version/bootstrap.min.css" rel="stylesheet">
+	<link href="<%=path%>/resources/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="<%=path%>/resources/css/new_version/site.css" rel="stylesheet">
+<link href="<%=path %>/resources/validform/css/style.css" rel="stylesheet">
+<link href="<%=path %>/resources/css/dashboard.css" rel="stylesheet">
+<link href="<%=path %>/resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="<%=path %>/resources/css/bootstrap-select.css" rel="stylesheet">
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+   <script src="<%=path%>/resources/js/new_version/jquery.min.js"></script>
+    <script src="<%=path%>/resources/js/new_version/bootstrap.min.js"></script>
+    
+     <script src="<%=path%>/resources/js/new_version/site.js"></script>
+	<script src="<%=path %>/resources/js/bootstrap3.3.5/bootstrap-datetimepicker.js"></script>
+	<script src="<%=path %>/resources/js/bootstrap3.3.5/bootstrap-datetimepicker.zh-CN.js"></script>	
+	<script type="text/javascript" src="<%=path %>/resources/validform/js/Validform_v5.3.2_min.js"></script>
+	<script type="text/javascript" src="<%=path %>/resources/js/bootstrap3.3.5/bootstrap-select.js"></script>
+	<script type="text/javascript" src="<%=path %>/resources/js/jquery-ui-min-1.9.js"></script>
+	<script type="text/javascript" src="<%=path %>/resources/js/Chinese-characters-to-Pinyin/py.js"></script>
+	 <script src="<%=path%>/resources/js/new_version/script.js"></script></head>
+<script type="text/javascript">
+	 function instanceTerminate(taskId,instanceId){
+		 var url = "${webRoot}/datatask/instanceTerminate?taskId="+taskId+"&instanceId="+instanceId;
+			$.post(url,null,function(data){
+				if(data=="SUCCESS" || data=="\"SUCCESS\""){
+					alert("已发送停止消息!");
+					window.location.href="${webRoot}/datatask/settask";
+				}else{
+					alert(data);
+				}
+			});
+	 }
+
+	</script>
+  <body>
+<body style="margin:0; padding:0">
+	<jsp:include page="../topBase.jsp"></jsp:include>
+<div class="container-fluid search_select select-result" style="padding-left:0">
+<h2 class="content_title">任务实例</h2>
+		<label class="content-label" >任务ID：${task.taskId }&nbsp;任务名称:${task.taskName }</label>
+<div class="container-fluid search_select select-result" style="padding-left:0; margin:0 auto">
+		<div class="table-responsive">
+			<table class="table table-striped">
+              <thead>
+                <tr>
+               	  <th><input type="checkbox" name="chk_all" id="chk_all" onclick="SelectAll()" /></th>
+                  <th>任务ID</th>
+                  <th>实例ID</th>
+                  <th>创建人</th>
+                  <th>开始时间</th>
+                  <th>阶段</th>
+                  <th>状态</th>
+				  <th>应处理量</th>
+				  <th>已处理量</th>
+				  <th>处理进度</th>                  
+                  <th>终止时间</th>
+                </tr>
+              </thead>
+              <form action="${webRoot }/datatask/taskInstanceList" id="form1">
+              <input type="hidden" name="taskInstance.taskId" value="${task.taskId }">
+				<tbody id="tbody">
+					<c:if test="${not empty instances}">
+						<c:forEach var="instance" items="${instances }" varStatus="ts">
+							<tr align="left">
+								<td><input type='checkbox' name='chk_list'
+									value="${instance.instanceId }"></td>
+								<td>${instance.taskId }</td>
+								<td>${instance.instanceId }</td>
+								<td>${instance.publisherId }</td>
+								<td>${instance.publishTime }</td>
+								<td>
+									<c:choose>
+										<c:when test="${instance.stage == 0}">采集</c:when>
+										<c:when test="${instance.stage == 1}">合并</c:when>
+										<c:when test="${instance.stage == 2}">抽取</c:when>
+										<c:when test="${instance.stage == 3}">预处理</c:when>
+										<c:when test="${instance.stage == 4}">清洗</c:when>
+										<c:when test="${instance.stage == 5}">交付</c:when>
+									</c:choose>
+								</td>
+								<td>
+									<c:choose>
+										<c:when test="${instance.status == 0}">待审核</c:when>
+										<c:when test="${instance.status == 1}">进行中</c:when>
+										<c:when test="${instance.status == 2}">已完成</c:when>
+										<c:when test="${instance.status == 3}">已删除</c:when>
+										<c:when test="${instance.status == 4}">执行失败</c:when>
+									</c:choose>
+								</td>
+								<td style="text-align: right;">${instance.totalAmount }</td>
+								<td style="text-align: right;">${instance.handledAmount }</td>
+								<td style="text-align: right;">${instance.handledPercent }<c:if test="${not empty instance.handledPercent }">%</c:if></td>
+								<td>${instance.finishTime }</td>
+							</tr>
+						</c:forEach>
+					</c:if>
+				</tbody>
+				
+			</form>
+            </table>
+             <div  class="listtablebot">
+				${page.pageStr }
+			 </div>
+          </div>
+        </div>
+    </div>
+    </body>
+</html>

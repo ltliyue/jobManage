@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.dataManage.data_mapper.CrawlerDataDeliverMapper">
+	<resultMap id="BaseResultMap"
+		type="inspur.crawl.dataManage.pojo.CrawlerDataDeliver">
+		<id column="DEMAND_ID" property="demandId" jdbcType="VARCHAR" />
+		<id column="PUBLISH_ID" property="publishId" jdbcType="VARCHAR" />
+		<result column="TABLE_NAME" property="tableName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="DELIVER_TIME" property="deliverTime" jdbcType="TIMESTAMP" />
+		<result column="DEMAND_NAME" property="demandName" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		DEMAND_ID, PUBLISH_ID, TABLE_NAME, STATUS, DELIVER_TIME
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.dataManage.pojo.CrawlerDataDeliverCriteria">
+		<if test="skipCount > 0">
+			select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select
+			<include refid="Base_Column_List" />
+			from CRAWLER_DATA_DELIVER
+			<if test="_parameter != null">
+				<include refid="Example_Where_Clause" />
+			</if>
+			<if test="orderByClause != null">
+				order by ${orderByClause}
+			</if>
+			) temp_table
+			<if test="top >= 0">
+        <![CDATA[ where rownum <= ${top} ]]>
+			</if>
+			) where rn>=${skipCount}
+		</if>
+		<if test="skipCount == 0">
+			<if test="top >= 0">
+				SELECT temp_table.*,ROWNUM rn from (
+			</if>
+			select
+			<include refid="Base_Column_List" />
+			from CRAWLER_DATA_DELIVER
+			<if test="_parameter != null">
+				<include refid="Example_Where_Clause" />
+			</if>
+			<if test="orderByClause != null">
+				order by ${orderByClause}
+			</if>
+			<if test="top >= 0">
+				) temp_table <![CDATA[ where rownum <= ${top} ]]>
+			</if>
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="inspur.crawl.dataManage.pojo.CrawlerDataDeliverKey">
+		select
+		<include refid="Base_Column_List" />
+		from CRAWLER_DATA_DELIVER
+		where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+		and PUBLISH_ID = #{publishId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="inspur.crawl.dataManage.pojo.CrawlerDataDeliverKey">
+		delete from CRAWLER_DATA_DELIVER
+		where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+		and PUBLISH_ID = #{publishId,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteByExample"
+		parameterType="inspur.crawl.dataManage.pojo.CrawlerDataDeliverCriteria">
+		delete from CRAWLER_DATA_DELIVER
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="inspur.crawl.dataManage.pojo.CrawlerDataDeliver">
+		insert into CRAWLER_DATA_DELIVER (DEMAND_ID, PUBLISH_ID, TABLE_NAME,
+		STATUS, DELIVER_TIME)
+		values (#{demandId,jdbcType=VARCHAR}, #{publishId,jdbcType=VARCHAR},
+		#{tableName,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR}, #{deliverTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="inspur.crawl.dataManage.pojo.CrawlerDataDeliver">
+		insert into CRAWLER_DATA_DELIVER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="demandId != null">
+				DEMAND_ID,
+			</if>
+			<if test="publishId != null">
+				PUBLISH_ID,
+			</if>
+			<if test="tableName != null">
+				TABLE_NAME,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="deliverTime != null">
+				DELIVER_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="demandId != null">
+				#{demandId,jdbcType=VARCHAR},
+			</if>
+			<if test="publishId != null">
+				#{publishId,jdbcType=VARCHAR},
+			</if>
+			<if test="tableName != null">
+				#{tableName,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="deliverTime != null">
+				#{deliverTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample"
+		parameterType="inspur.crawl.dataManage.pojo.CrawlerDataDeliverCriteria"
+		resultType="java.lang.Integer">
+		select count(*) from CRAWLER_DATA_DELIVER
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update CRAWLER_DATA_DELIVER
+		<set>
+			<if test="record.demandId != null">
+				DEMAND_ID = #{record.demandId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.publishId != null">
+				PUBLISH_ID = #{record.publishId,jdbcType=VARCHAR},
+			</if>
+			<if test="record.tableName != null">
+				TABLE_NAME = #{record.tableName,jdbcType=VARCHAR},
+			</if>
+			<if test="record.status != null">
+				STATUS = #{record.status,jdbcType=VARCHAR},
+			</if>
+			<if test="record.deliverTime != null">
+				DELIVER_TIME = #{record.deliverTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update CRAWLER_DATA_DELIVER
+		set DEMAND_ID = #{record.demandId,jdbcType=VARCHAR},
+		PUBLISH_ID = #{record.publishId,jdbcType=VARCHAR},
+		TABLE_NAME = #{record.tableName,jdbcType=VARCHAR},
+		STATUS = #{record.status,jdbcType=VARCHAR},
+		DELIVER_TIME = #{record.deliverTime,jdbcType=TIMESTAMP}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.dataManage.pojo.CrawlerDataDeliver">
+		update CRAWLER_DATA_DELIVER
+		<set>
+			<if test="tableName != null">
+				TABLE_NAME = #{tableName,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="deliverTime != null">
+				DELIVER_TIME = #{deliverTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+		and PUBLISH_ID = #{publishId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="inspur.crawl.dataManage.pojo.CrawlerDataDeliver">
+		update CRAWLER_DATA_DELIVER
+		set TABLE_NAME = #{tableName,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=VARCHAR},
+		DELIVER_TIME = #{deliverTime,jdbcType=TIMESTAMP}
+		where DEMAND_ID = #{demandId,jdbcType=VARCHAR}
+		and PUBLISH_ID = #{publishId,jdbcType=VARCHAR}
+	</update>
+	<select id="listPageForDelvierVersion" resultMap="BaseResultMap"
+		parameterType="map">
+		select de.demand_id,de.publish_id,de.deliver_time,d.demand_name
+		,de.status
+		from crawler_data_deliver de
+		left join crawler_demand d
+		on de.demand_id=d.demand_id
+		<where>
+			de.status=2
+			<if test="deliver.demandId != null and deliver.demandId!=''">
+				and de.demand_id=#{deliver.demandId}
+			</if>
+		</where>
+		order by de.deliver_time desc
+
+	</select>
+</mapper>

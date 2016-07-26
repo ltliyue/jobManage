@@ -1,0 +1,38 @@
+package inspur.crawl.demandAna.mapper;
+
+import inspur.crawl.demandAna.pojo.CrawlerDemandDelivery;
+import inspur.crawl.demandAna.pojo.CrawlerDemandDeliveryCriteria;
+import inspur.crawl.demandAna.pojo.CrawlerDemandDeliveryKey;
+import inspur.crawl.demandAna.pojo.DemandAnalyse;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+public interface CrawlerDemandDeliveryMapper {
+    int countByExample(CrawlerDemandDeliveryCriteria example);
+
+    int deleteByExample(CrawlerDemandDeliveryCriteria example);
+
+    int deleteByPrimaryKey(CrawlerDemandDeliveryKey key);
+
+    int insert(CrawlerDemandDelivery record);
+
+    int insertSelective(CrawlerDemandDelivery record);
+
+    List<CrawlerDemandDelivery> selectByExample(CrawlerDemandDeliveryCriteria example);
+
+    CrawlerDemandDelivery selectByPrimaryKey(CrawlerDemandDeliveryKey key);
+
+    int updateByExampleSelective(@Param("record") CrawlerDemandDelivery record, @Param("example") CrawlerDemandDeliveryCriteria example);
+
+    int updateByExample(@Param("record") CrawlerDemandDelivery record, @Param("example") CrawlerDemandDeliveryCriteria example);
+
+    int updateByPrimaryKeySelective(CrawlerDemandDelivery record);
+
+    int updateByPrimaryKey(CrawlerDemandDelivery record);
+
+	List<CrawlerDemandDelivery> selectBySiteIdAndDemandId(@Param("siteId") String siteId, @Param("demandId") String demandId);
+
+	int deleteByDemandAndSiteId(@Param("demandId") String demandId, @Param("siteId") String siteId);
+}

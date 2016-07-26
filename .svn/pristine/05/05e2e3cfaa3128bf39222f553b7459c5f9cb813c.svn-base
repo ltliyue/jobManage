@@ -1,0 +1,312 @@
+package inspur.crawl.requirementCode.controller;
+
+import inspur.crawl.common.controller.BaseController;
+import inspur.crawl.common.tools.TimeCompare;
+import inspur.crawl.requirementCode.pojo.RCode;
+import inspur.crawl.requirementCode.service.RCodeService;
+
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+@RestController
+@RequestMapping("/rcode")
+public class RCodeController extends BaseController {
+	@Resource
+	RCodeService service;
+
+	@InitBinder("rCode")
+	public void typeBinder(WebDataBinder binder) {
+		binder.setFieldDefaultPrefix("rCode.");
+	}
+
+	/**
+	 * 根据Query条件获取需求列表
+	 * 
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/listContent", method = RequestMethod.GET)
+	public ModelAndView content(RCode record) throws Exception {
+
+		System.out.println("--listContent--需求查询条件：" + record.toString());
+
+		List<RCode> list = listContentq(record);
+
+		System.out.println("--listContent--需求查询结果：" + list);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("accounts", list);
+		map.put("page", record);
+		return request("sys/rcode/listContent", map);
+	}
+
+	/**
+	 * 查找listContent
+	 * 
+	 * @param id
+	 * @param name
+	 */
+	@RequestMapping(value = "/listContentq", method = RequestMethod.POST)
+	@ResponseBody
+	public List<RCode> listContentq(RCode record) throws UnsupportedEncodingException {
+
+		List<RCode> list = service.getResourceAll(record);
+
+		return list;
+	}
+
+	@RequestMapping(value = "/saveInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public void saveInfo(String id, String name, PrintWriter out) throws UnsupportedEncodingException {
+		RCode query = new RCode();
+		query.setId(Integer.parseInt(TimeCompare.turnTime3(new Date())));
+		query.setName(name);
+
+		System.out.println("----saveInfo查询条件：" + query.toString());
+
+		int result = service.saveInfo(query);
+		System.out.println("----saveInfo保存结果：" + result);
+		if (result == 1) {
+			System.out.println("----信息保存成功");
+			out.print("01");
+		} else {
+			System.out.println("----信息保存失败");
+			out.print("00");
+		}
+	}
+
+	/**
+	 * 更新需求
+	 * 
+	 * @param id
+	 * @param name
+	 */
+	@RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateInfo(String id, String name, PrintWriter out) throws UnsupportedEncodingException {
+		RCode query = new RCode();
+		query.setId(Integer.parseInt(id));
+		query.setName(name);
+
+		System.out.println("----update查询条件：" + query.toString());
+
+		int result = service.updateInfo(query);
+		System.out.println("----update保存结果：" + result);
+		if (result == 1) {
+			System.out.println("----update修改成功");
+			out.print("01");
+		} else {
+			System.out.println("----信息修改失败");
+			out.print("00");
+		}
+	}
+
+	/**
+	 * 删除任务 id
+	 */
+	@RequestMapping(value = "/deletebyid", method = RequestMethod.POST)
+	@ResponseBody
+	public int deletebyid(Integer id) {
+		System.out.println("删除：" + id);
+		return service.deleteByPrimaryKey(id);
+	}
+
+	// =====
+
+	/**
+	 * 根据Query条件获取需求列表
+	 * 
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/listContentType", method = RequestMethod.GET)
+	public ModelAndView contentType(RCode record) throws Exception {
+
+		System.out.println("--listContentType--需求查询条件：" + record.toString());
+
+		List<RCode> list = listContentTypeq(record);
+
+		System.out.println("--listContentType--需求查询结果：" + list);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("accounts", list);
+		map.put("page", record);
+		return request("sys/rcode/listContentType", map);
+	}
+
+	/**
+	 * 查找listContentType
+	 * 
+	 * @param id
+	 * @param name
+	 */
+	@RequestMapping(value = "/listContentTypeq", method = RequestMethod.POST)
+	@ResponseBody
+	public List<RCode> listContentTypeq(RCode record) throws UnsupportedEncodingException {
+
+		List<RCode> list = service.getResourceAllType(record);
+
+		return list;
+	}
+
+	@RequestMapping(value = "/saveInfoType", method = RequestMethod.POST)
+	@ResponseBody
+	public void saveInfoType(String id, String name, PrintWriter out) throws UnsupportedEncodingException {
+		RCode query = new RCode();
+		query.setId(Integer.parseInt(TimeCompare.turnTime3(new Date())));
+		query.setName(name);
+
+		System.out.println("----saveInfoType--查询条件：" + query.toString());
+
+		int result = service.saveInfoType(query);
+		System.out.println("----saveInfoType--保存结果：" + result);
+		if (result == 1) {
+			System.out.println("----信息保存成功");
+			out.print("01");
+		} else {
+			System.out.println("----信息保存失败");
+			out.print("00");
+		}
+	}
+
+	/**
+	 * 更新需求
+	 * 
+	 * @param id
+	 * @param name
+	 */
+	@RequestMapping(value = "/updateInfoType", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateInfoType(String id, String name, PrintWriter out) throws UnsupportedEncodingException {
+		RCode query = new RCode();
+		query.setId(Integer.parseInt(id));
+		query.setName(name);
+
+		System.out.println("----update查询条件：" + query.toString());
+
+		int result = service.updateInfoType(query);
+		System.out.println("----update保存结果：" + result);
+		if (result == 1) {
+			System.out.println("----update修改成功");
+			out.print("01");
+		} else {
+			System.out.println("----信息修改失败");
+			out.print("00");
+		}
+	}
+
+	/**
+	 * 删除任务 id
+	 */
+	@RequestMapping(value = "/deletebyidType", method = RequestMethod.POST)
+	@ResponseBody
+	public int deletebyidType(Integer id) {
+		System.out.println("删除：" + id);
+		return service.deleteByPrimaryKeyType(id);
+	}
+
+	// =====
+
+	/**
+	 * 根据Query条件获取需求列表
+	 * 
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/listContentStatus", method = RequestMethod.GET)
+	public ModelAndView contentStatus(RCode record) throws Exception {
+
+		System.out.println("--listContentStatus--需求查询条件：" + record.toString());
+
+		List<RCode> list = listContentStatusq(record);
+
+		System.out.println("--listContentStatus--需求查询结果：" + list);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("accounts", list);
+		map.put("page", record);
+		return request("sys/rcode/listContentStatus", map);
+	}
+
+	/**
+	 * 查找listContentStatus
+	 * 
+	 * @param id
+	 * @param name
+	 */
+	@RequestMapping(value = "/listContentStatusq", method = RequestMethod.POST)
+	@ResponseBody
+	public List<RCode> listContentStatusq(RCode record) throws UnsupportedEncodingException {
+
+		List<RCode> list = service.getResourceAllStatus(record);
+
+		return list;
+	}
+
+	@RequestMapping(value = "/saveInfoStatus", method = RequestMethod.POST)
+	@ResponseBody
+	public void saveInfoStatus(String id, String name, PrintWriter out) throws UnsupportedEncodingException {
+		RCode query = new RCode();
+		query.setId(Integer.parseInt(TimeCompare.turnTime3(new Date())));
+		query.setName(name);
+
+		System.out.println("----saveInfoStatus--查询条件：" + query.toString());
+
+		int result = service.saveInfoStatus(query);
+		System.out.println("----saveInfoStatus--保存结果：" + result);
+		if (result == 1) {
+			System.out.println("----信息保存成功");
+			out.print("01");
+		} else {
+			System.out.println("----信息保存失败");
+			out.print("00");
+		}
+	}
+
+	/**
+	 * 更新需求
+	 * 
+	 * @param id
+	 * @param name
+	 */
+	@RequestMapping(value = "/updateInfoStatus", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateInfoStatus(String id, String name, PrintWriter out) throws UnsupportedEncodingException {
+		RCode query = new RCode();
+		query.setId(Integer.parseInt(id));
+		query.setName(name);
+
+		System.out.println("----update查询条件：" + query.toString());
+
+		int result = service.updateInfoStatus(query);
+		System.out.println("----update保存结果：" + result);
+		if (result == 1) {
+			System.out.println("----update修改成功");
+			out.print("01");
+		} else {
+			System.out.println("----信息修改失败");
+			out.print("00");
+		}
+	}
+
+	/**
+	 * 删除任务 id
+	 */
+	@RequestMapping(value = "/deletebyidStatus", method = RequestMethod.POST)
+	@ResponseBody
+	public int deletebyidStatus(Integer id) {
+		System.out.println("删除：" + id);
+		return service.deleteByPrimaryKeyStatus(id);
+	}
+}

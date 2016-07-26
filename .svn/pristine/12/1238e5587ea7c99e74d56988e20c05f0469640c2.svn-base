@@ -1,0 +1,214 @@
+package inspur.crawl.common.tools;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.inspur.kafka.crawl.model.CrawlRequest;
+import com.inspur.kafka.crawl.model.CrawlResult;
+
+/**
+ * 采集进程
+ * 
+ * @author sun_haifeng
+ *
+ */
+public class HttpClientSingle {
+
+	private static Logger log = LoggerFactory.getLogger(HttpClientSingle.class);
+
+	public static CrawlResult t(CrawlRequest crawlq,int failureCount) throws Exception {
+		if(crawlq.getChangecrawl()==0){
+			return client(crawlq,failureCount);
+		}else{
+			return HtmlUnitSingle.t(crawlq);
+		}
+	}
+	private static HttpMethod postMethod(String url) throws IOException{
+        PostMethod post = new PostMethod(urlPage(url));
+//        post.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=gbk"); 
+        
+        String[] arrSplit=null;
+       
+      String strUrlParam=truncateUrlPage(url);
+        //每个键值为一组 
+      arrSplit=strUrlParam.split("[&]");
+      int n = arrSplit.length;
+      NameValuePair[] param = new NameValuePair[n];
+      for(int i=0;i<n;i++)
+      {
+    	  String strSplit = arrSplit[i];
+            String[] arrSplitEqual=null;         
+            arrSplitEqual= strSplit.split("[=]");
+           
+            //解析出键值
+            if(arrSplitEqual.length>1)
+            {
+                //正确解析
+            	param[i] = new NameValuePair(arrSplitEqual[0], arrSplitEqual[1]);
+                
+            }
+            else
+            {
+                if(arrSplitEqual[0]!="")
+                {
+                //只有参数没有值，不加入
+                	param[i] = new NameValuePair(arrSplitEqual[0], "");       
+                }
+            }
+      }   
+        System.out.println("ss::"+param[2]);
+        post.setRequestBody(param);
+        return post;
+    }
+	public static CrawlResult client(CrawlRequest crawlq,int failureCount) throws Exception{
+		CrawlResult cresult = new CrawlResult();
+		HttpMethod getMethod = null;
+		/* 1 生成 HttpClinet 对象并设置参数 */
+		HttpClient httpClient = new HttpClient();
+		// 设置 Http 连接超时
+		if(failureCount==0){
+			httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
+		}else {
+			httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(failureCount*10000);
+		}
+		
+		 if(crawlq.getDownloadType()==1){
+			 getMethod =  postMethod(crawlq.getUrl());  
+		}else{
+			/* 2 生成 GetMethod 对象并设置参数 */
+			getMethod = new GetMethod(UrlCompile.UrlCompileC(crawlq.getUrl()));
+			/* 3 执行 HTTP GET 请求 */
+		}
+		
+			// 设置 get 请求超时为 5 秒
+			getMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, crawlq.getTimeout());
+			// 设置请求重试处理，默认的是重试处理：请求三次
+			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(crawlq.getRetryHandler(), false));
+			getMethod.addRequestHeader("User-Agent",
+					"Mozilla/5.0 (Windows NT 5.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36");
+		Integer statusCode;
+		try {
+			statusCode = httpClient.executeMethod(getMethod);
+			/* 4 判断访问的状态码 */
+			if (statusCode.intValue() != HttpStatus.SC_OK) {
+				System.err.println("Method failed: " + getMethod.getStatusLine());
+			}
+			/* 5 处理 HTTP 响应内容 */
+			// HTTP响应头部信息，这里简单打印
+			Header[] headers = getMethod.getResponseHeaders();
+			Map<String, String> mapHeader = new HashMap<>();
+			for (Header h : headers) {
+				mapHeader.put(h.getName(), h.getValue());
+			}
+			// 读取为 InputStream，在网页内容数据量大时候推荐使用
+			String chars = ((HttpMethodBase) getMethod).getResponseCharSet();
+			if ("ISO-8859-1".equals(chars.toUpperCase())) {
+				chars = "UTF-8";
+			}
+
+			StringBuffer resultBuffer = new StringBuffer();
+			BufferedReader in = new BufferedReader(new InputStreamReader(getMethod.getResponseBodyAsStream(), chars));
+			String inputLine = null;
+			
+			while ((inputLine = in.readLine()) !=null) {
+				resultBuffer.append(inputLine);
+				resultBuffer.append("\n");
+			}
+			in.close();
+			String result = resultBuffer.toString();
+
+			System.out.println("采集执行完成：" + crawlq.getUrl());
+			// System.out.println("resultheader:"+resultheader);
+			// System.out.println("charts:"+chars);
+			cresult.setUrl(crawlq.getUrl());
+			cresult.setContent(result);
+			cresult.setHeards(mapHeader);
+			cresult.setStatusCode(statusCode + "");
+			;
+			cresult.setCrawlTime(new Date());
+			Map map = new HashMap();
+			map.put("url", crawlq.getUrl());
+			log.info(map.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+			cresult = null;
+			System.out.println("采集失败");
+			throw e;
+		} finally {
+			/* 6 .释放连接 */
+			getMethod.releaseConnection();
+		}
+
+		return cresult;
+	}
+	/**
+     * 去掉url中的路径，留下请求参数部分
+     * @param strURL url地址
+     * @return url请求参数部分
+     */
+    private static String truncateUrlPage(String strURL)
+    {
+    String strAllParam=null;
+      String[] arrSplit=null;
+     
+      strURL=strURL.trim().toLowerCase();
+     
+      arrSplit=strURL.split("[?]");
+      if(strURL.length()>1)
+      {
+          if(arrSplit.length>1)
+          {
+                  if(arrSplit[1]!=null)
+                  {
+                  strAllParam=arrSplit[1];
+                  }
+          }
+      }
+     
+    return strAllParam;   
+    }
+    /**
+     * 去掉url中的路径，除去参数部分
+     * @param strURL url地址
+     * @return 
+     */
+    private static String urlPage(String strURL)
+    {
+    String strAllParam=null;
+      String[] arrSplit=null;
+     
+      strURL=strURL.trim().toLowerCase();
+     
+      arrSplit=strURL.split("[?]");
+      if(strURL.length()>1)
+      {
+          if(arrSplit.length>1)
+          {
+                  if(arrSplit[1]!=null)
+                  {
+                  strAllParam=arrSplit[0];
+                  }
+          }
+      }
+     
+    return strAllParam;   
+    }
+}

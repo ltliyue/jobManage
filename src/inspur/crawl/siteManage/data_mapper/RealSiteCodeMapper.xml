@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="inspur.crawl.siteManage.data_mapper.RealSiteCodeMapper" >
+  <resultMap id="BaseResultMap" type="inspur.crawl.siteManage.pojo.RealSiteCode" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="SITE_TYPE" property="siteType" jdbcType="VARCHAR" />
+    <result column="SITE_DESCRIPTION" property="siteDescription" jdbcType="VARCHAR" />
+    <result column="PUBLISHER_ID" property="publisherId" jdbcType="VARCHAR" />
+    <result column="PUBLISH_TIME" property="publishTime" jdbcType="TIMESTAMP" />
+    <result column="VALIDATE_FLAG" property="validateFlag" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="EXECUTION_CYCLE" property="executionCycle" jdbcType="VARCHAR" />
+    <result column="DUE_TIME" property="dueTime" jdbcType="VARCHAR" />
+    <result column="OTHER_DESCRIPTION" property="otherDescription" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, NAME, URL, SITE_TYPE, SITE_DESCRIPTION, PUBLISHER_ID, PUBLISH_TIME, VALIDATE_FLAG, 
+    PARENT_ID, EXECUTION_CYCLE, DUE_TIME, OTHER_DESCRIPTION
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="inspur.crawl.siteManage.pojo.RealSiteCodeCriteria" >
+    <if test="skipCount > 0" >
+       select * FROM ( SELECT temp_table.*,ROWNUM rn from ( select 
+      <include refid="Base_Column_List" />
+      from CODE_SITE_REAL
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      ) temp_table 
+      <if test="top >= 0" >
+        <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+       ) where rn>=${skipCount}
+    </if>
+    <if test="skipCount == 0" >
+      <if test="top >= 0" >
+        SELECT temp_table.*,ROWNUM rn from ( 
+      </if>
+      select
+      <include refid="Base_Column_List" />
+      from CODE_SITE_REAL
+      <if test="_parameter != null" >
+        <include refid="Example_Where_Clause" />
+      </if>
+      <if test="orderByClause != null" >
+        order by ${orderByClause}
+      </if>
+      <if test="top >= 0" >
+         ) temp_table <![CDATA[ where rownum <= ${top} ]]>
+      </if>
+    </if>
+  </select>
+  <select id="selectSiteType" parameterType="java.lang.String" resultType="java.util.HashMap">
+  	select T.ID,T.NAME from CODE_SITE T WHERE T.PARENT_ID = #{pid,jdbcType=VARCHAR} AND T.VALIDATE_FLAG='1'
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from CODE_SITE_REAL
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByNum" resultMap="BaseResultMap" >
+  	select * from(select s.*,ROWNUM rn from (select t.* from CODE_SITE_REAL t
+		where t.parent_id='0' 
+		<if test="name != null" >
+			and t.name like '%' || #{name,jdbcType=VARCHAR} || '%'
+		</if>
+		<if test="type != null" >
+			and t.site_type like '%' || #{type,jdbcType=VARCHAR} || '%'
+		</if>
+		and t.validate_flag='1' order by t.publish_time desc ) s where #{endNum,jdbcType=INTEGER}>= rownum)
+		where rn > #{startNum,jdbcType=INTEGER}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap" >
+  	select t.* from CODE_SITE_REAL t
+		where t.parent_id='0' and t.validate_flag='1' order by t.publish_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CODE_SITE_REAL
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="inspur.crawl.siteManage.pojo.RealSiteCodeCriteria" >
+    delete from CODE_SITE_REAL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="inspur.crawl.siteManage.pojo.RealSiteCode" >
+    insert into CODE_SITE_REAL (ID, NAME, URL, 
+      SITE_TYPE, SITE_DESCRIPTION, PUBLISHER_ID, 
+      PUBLISH_TIME, VALIDATE_FLAG, PARENT_ID, 
+      EXECUTION_CYCLE, DUE_TIME, OTHER_DESCRIPTION
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{siteType,jdbcType=VARCHAR}, #{siteDescription,jdbcType=VARCHAR}, #{publisherId,jdbcType=VARCHAR}, 
+      #{publishTime,jdbcType=TIMESTAMP}, #{validateFlag,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
+      #{executionCycle,jdbcType=VARCHAR}, #{dueTime,jdbcType=VARCHAR}, #{otherDescription,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="inspur.crawl.siteManage.pojo.RealSiteCode" >
+    insert into CODE_SITE_REAL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="url != null" >
+        URL,
+      </if>
+      <if test="siteType != null" >
+        SITE_TYPE,
+      </if>
+      <if test="siteDescription != null" >
+        SITE_DESCRIPTION,
+      </if>
+      <if test="publisherId != null" >
+        PUBLISHER_ID,
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME,
+      </if>
+      <if test="validateFlag != null" >
+        VALIDATE_FLAG,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+      <if test="executionCycle != null" >
+        EXECUTION_CYCLE,
+      </if>
+      <if test="dueTime != null" >
+        DUE_TIME,
+      </if>
+      <if test="otherDescription != null" >
+        OTHER_DESCRIPTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="siteType != null" >
+        #{siteType,jdbcType=VARCHAR},
+      </if>
+      <if test="siteDescription != null" >
+        #{siteDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherId != null" >
+        #{publisherId,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validateFlag != null" >
+        #{validateFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="executionCycle != null" >
+        #{executionCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="dueTime != null" >
+        #{dueTime,jdbcType=VARCHAR},
+      </if>
+      <if test="otherDescription != null" >
+        #{otherDescription,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="inspur.crawl.siteManage.pojo.RealSiteCodeCriteria" resultType="java.lang.Integer" >
+    select count(*) from CODE_SITE_REAL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CODE_SITE_REAL
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null" >
+        URL = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteType != null" >
+        SITE_TYPE = #{record.siteType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.siteDescription != null" >
+        SITE_DESCRIPTION = #{record.siteDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publisherId != null" >
+        PUBLISHER_ID = #{record.publisherId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publishTime != null" >
+        PUBLISH_TIME = #{record.publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.validateFlag != null" >
+        VALIDATE_FLAG = #{record.validateFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentId != null" >
+        PARENT_ID = #{record.parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.executionCycle != null" >
+        EXECUTION_CYCLE = #{record.executionCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dueTime != null" >
+        DUE_TIME = #{record.dueTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherDescription != null" >
+        OTHER_DESCRIPTION = #{record.otherDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateValidate" parameterType="java.lang.String">
+  	update CODE_SITE_REAL
+  	set VALIDATE_FLAG = '0'
+  	where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CODE_SITE_REAL
+    set ID = #{record.id,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      URL = #{record.url,jdbcType=VARCHAR},
+      SITE_TYPE = #{record.siteType,jdbcType=VARCHAR},
+      SITE_DESCRIPTION = #{record.siteDescription,jdbcType=VARCHAR},
+      PUBLISHER_ID = #{record.publisherId,jdbcType=VARCHAR},
+      PUBLISH_TIME = #{record.publishTime,jdbcType=TIMESTAMP},
+      VALIDATE_FLAG = #{record.validateFlag,jdbcType=VARCHAR},
+      PARENT_ID = #{record.parentId,jdbcType=VARCHAR},
+      EXECUTION_CYCLE = #{record.executionCycle,jdbcType=VARCHAR},
+      DUE_TIME = #{record.dueTime,jdbcType=VARCHAR},
+      OTHER_DESCRIPTION = #{record.otherDescription,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="inspur.crawl.siteManage.pojo.RealSiteCode" >
+    update CODE_SITE_REAL
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="siteType != null" >
+        SITE_TYPE = #{siteType,jdbcType=VARCHAR},
+      </if>
+      <if test="siteDescription != null" >
+        SITE_DESCRIPTION = #{siteDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherId != null" >
+        PUBLISHER_ID = #{publisherId,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        PUBLISH_TIME = #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validateFlag != null" >
+        VALIDATE_FLAG = #{validateFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="executionCycle != null" >
+        EXECUTION_CYCLE = #{executionCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="dueTime != null" >
+        DUE_TIME = #{dueTime,jdbcType=VARCHAR},
+      </if>
+      <if test="otherDescription != null" >
+        OTHER_DESCRIPTION = #{otherDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="inspur.crawl.siteManage.pojo.RealSiteCode" >
+    update CODE_SITE_REAL
+    set NAME = #{name,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      SITE_TYPE = #{siteType,jdbcType=VARCHAR},
+      SITE_DESCRIPTION = #{siteDescription,jdbcType=VARCHAR},
+      PUBLISHER_ID = #{publisherId,jdbcType=VARCHAR},
+      PUBLISH_TIME = #{publishTime,jdbcType=TIMESTAMP},
+      VALIDATE_FLAG = #{validateFlag,jdbcType=VARCHAR},
+      PARENT_ID = #{parentId,jdbcType=VARCHAR},
+      EXECUTION_CYCLE = #{executionCycle,jdbcType=VARCHAR},
+      DUE_TIME = #{dueTime,jdbcType=VARCHAR},
+      OTHER_DESCRIPTION = #{otherDescription,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

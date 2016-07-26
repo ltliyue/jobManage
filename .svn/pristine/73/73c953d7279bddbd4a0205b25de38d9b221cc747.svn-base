@@ -1,0 +1,2 @@
+cluster.contactPoints=172.22.5.2,172.22.5.3,172.22.5.4
+keyspace.name=crawler_db

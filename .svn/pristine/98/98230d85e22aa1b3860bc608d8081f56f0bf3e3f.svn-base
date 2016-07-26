@@ -1,0 +1,15 @@
+/build
+
+## .gitignore for mac os x
+
+.DS_Store
+.AppleDouble
+.LSOverride
+.localized
+
+## .gitignore for intellij
+
+*.iml
+*.ipr
+*.iws
+.idea/
